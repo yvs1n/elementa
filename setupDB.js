@@ -19,6 +19,10 @@ async function setup() {
 
         console.log("Creating tables...");
         
+        // Drop existing to ensure schema updates (like UNIQUE) are applied
+        await client.query('DROP TABLE IF EXISTS progress');
+        await client.query('DROP TABLE IF EXISTS papers');
+        
         // 1. Users Table
         await client.query(`
             CREATE TABLE IF NOT EXISTS users (
