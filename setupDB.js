@@ -34,7 +34,7 @@ async function setup() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS papers (
                 id SERIAL PRIMARY KEY,
-                title TEXT NOT NULL,
+                title TEXT UNIQUE NOT NULL,
                 series TEXT NOT NULL,
                 paper TEXT NOT NULL,
                 exam_date DATE NOT NULL,
@@ -91,11 +91,10 @@ async function setup() {
         ];
 
         const videoPool = [
-            "https://media.w3.org/2010/05/bunny/movie.mp4",
-            "https://media.w3.org/2010/05/sintel/movie.mp4",
-            "https://media.w3.org/2010/05/bunny/trailer.mp4",
-            "https://media.w3.org/2010/05/sintel/trailer.mp4",
-            "https://media.w3.org/2010/05/video/movie_300.mp4"
+            "https://www.w3schools.com/html/mov_bbb.mp4",
+            "https://www.w3schools.com/html/movie.mp4",
+            "https://www.w3schools.com/html/mov_bbb.mp4",
+            "https://www.w3schools.com/html/movie.mp4"
         ];
 
         const mnthMap = { "Jan": "01", "June": "06", "Oct": "10" };
@@ -104,7 +103,11 @@ async function setup() {
         const insertPaperQuery = `
             INSERT INTO papers (title, series, paper, exam_date, duration_seconds, video_url) 
             VALUES ($1, $2, $3, $4, $5, $6)
-            ON CONFLICT DO NOTHING
+            ON CONFLICT (title) DO UPDATE SET 
+                video_url = EXCLUDED.video_url,
+                series = EXCLUDED.series,
+                paper = EXCLUDED.paper,
+                exam_date = EXCLUDED.exam_date
         `;
 
         for (let i = 0; i < RAW_PAPERS.length; i++) {
