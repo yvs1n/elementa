@@ -246,34 +246,57 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             `;
             dashHero.onclick = () => window.location.href = `player.html?id=${data.lastOpened.id}`;
+        } else {
+            // "New User" Hero State
+            dashHero.innerHTML = `
+                <div class="flex flex-col items-center justify-center text-center p-12 max-w-sm">
+                    <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
+                        <span class="material-symbols-outlined text-4xl">local_library</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-on-surface tracking-tight mb-2">Welcome to your Portal</h3>
+                    <p class="text-sm text-on-surface-variant mb-8 leading-relaxed">It looks like you haven't started any lessons yet. Visit the Library to find your first walkthrough.</p>
+                    <a href="video_lessons.html" class="bg-primary text-on-primary px-8 py-3 rounded-full font-bold uppercase tracking-widest text-[0.65rem] hover:scale-105 transition-transform">Browse Library</a>
+                </div>
+            `;
+            dashHero.classList.remove('cursor-pointer');
+            dashHero.onclick = null;
         }
 
         // 4. History Grid Render
         const grid = document.getElementById('history-grid');
-        if (grid && data.history) {
-            grid.innerHTML = '';
-            data.history.forEach(item => {
-                let p = formatProgress(item.watched_seconds, item.duration_seconds);
-                grid.innerHTML += `
-                <div class="group cursor-pointer" onclick="window.location.href='player.html?id=${item.id}'">
-                    <div class="aspect-video bg-surface-container border border-surface-container-highest/20 rounded-xl mb-4 relative overflow-hidden transition-transform duration-500 hover:-translate-y-1">
-                        <img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80" class="w-full h-full object-cover mix-blend-luminosity opacity-50 group-hover:scale-105 transition-transform duration-700"/>
-                        <span class="absolute bottom-3 right-3 bg-surface-container-highest/80 backdrop-blur-sm text-on-surface px-2 py-1 rounded text-xs font-bold tracking-wider">${p}%</span>
-                        <div class="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                             <span class="material-symbols-outlined text-white scale-150" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+        if (grid) {
+            if (data.history && data.history.length > 0) {
+                grid.innerHTML = '';
+                data.history.forEach(item => {
+                    let p = formatProgress(item.watched_seconds, item.duration_seconds);
+                    grid.innerHTML += `
+                    <div class="group cursor-pointer" onclick="window.location.href='player.html?id=${item.id}'">
+                        <div class="aspect-video bg-surface-container border border-surface-container-highest/20 rounded-xl mb-4 relative overflow-hidden transition-transform duration-500 hover:-translate-y-1">
+                            <img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80" class="w-full h-full object-cover mix-blend-luminosity opacity-50 group-hover:scale-105 transition-transform duration-700"/>
+                            <span class="absolute bottom-3 right-3 bg-surface-container-highest/80 backdrop-blur-sm text-on-surface px-2 py-1 rounded text-xs font-bold tracking-wider">${p}%</span>
+                            <div class="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                 <span class="material-symbols-outlined text-white scale-150" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                            </div>
+                            <div class="w-full absolute bottom-0 bg-surface/30 h-1"><div class="bg-primary h-full" style="width: ${p}%"></div></div>
                         </div>
-                        <div class="w-full absolute bottom-0 bg-surface/30 h-1"><div class="bg-primary h-full" style="width: ${p}%"></div></div>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">${item.title}</h4>
-                        <div class="flex items-center gap-2 text-on-surface-variant font-medium text-[0.65rem] uppercase tracking-widest opacity-80">
-                            <p>${item.series}</p>
-                            <span class="w-1 h-1 bg-on-surface-variant/30 rounded-full"></span>
-                            <p>${item.duration_seconds > 0 ? formatMins(item.duration_seconds) : 'Duration loading...'}</p>
+                        <div>
+                            <h4 class="text-sm font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">${item.title}</h4>
+                            <div class="flex items-center gap-2 text-on-surface-variant font-medium text-[0.65rem] uppercase tracking-widest opacity-80">
+                                <p>${item.series}</p>
+                                <span class="w-1 h-1 bg-on-surface-variant/30 rounded-full"></span>
+                                <p>${item.duration_seconds > 0 ? formatMins(item.duration_seconds) : 'Duration loading...'}</p>
+                            </div>
                         </div>
+                    </div>`;
+                });
+            } else {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 flex flex-col items-center justify-center opacity-30">
+                        <span class="material-symbols-outlined text-5xl mb-4">history</span>
+                        <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em]">No history recorded yet</p>
                     </div>
-                </div>`;
-            });
+                `;
+            }
         }
 
         // 5. Stats Update
@@ -304,6 +327,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const renderGrid = async (sortValue = 'date_desc') => {
             const res = await fetch(`/api/papers?sort=${sortValue}`);
             const data = await res.json();
+            
+            // Clean up loading indicators
+            const upcomingSection = document.querySelector('h2.text-2xl')?.parentElement?.nextElementSibling;
+            
             if (lessonsGrid && data.papers) {
                 lessonsGrid.innerHTML = '';
                 data.papers.forEach(paper => {
