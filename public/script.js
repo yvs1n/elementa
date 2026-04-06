@@ -190,9 +190,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             searchInput && searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
                 const cards = document.querySelectorAll('article, .bg-surface-container-lowest.p-6');
+                
                 cards.forEach(card => {
                     const txt = card.innerText.toLowerCase();
                     card.style.display = txt.includes(term) ? '' : 'none';
+                });
+
+                // Hide empty sections (for Past Papers page)
+                document.querySelectorAll('#papers-list section').forEach(section => {
+                    const visibleCards = section.querySelectorAll('.bg-surface-container-lowest.p-6[style="display: \'\';"], .bg-surface-container-lowest.p-6:not([style*="display: none"])');
+                    const hasVisible = Array.from(section.querySelectorAll('.bg-surface-container-lowest.p-6')).some(c => c.style.display !== 'none');
+                    section.style.display = hasVisible ? '' : 'none';
                 });
             });
         }
