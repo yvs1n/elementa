@@ -18,7 +18,20 @@ const pool = new Pool({
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public'), { index: false }));
+// Add upcoming_exam columns if they don't exist
+// Add upcoming_exams table
+pool.query(`
+    CREATE TABLE IF NOT EXISTS upcoming_exams (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        title VARCHAR(255) NOT NULL,
+        subtitle VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+`).catch(() => null);
+
+// Add exam_date column if missing
+pool.query(`ALTER TABLE upcoming_exams ADD COLUMN IF NOT EXISTS exam_date DATE`).catch(() => null);
 
 // Auth Middleware
 async function requireAuth(req, res, next) {
@@ -32,6 +45,48 @@ async function requireAuth(req, res, next) {
     });
 }
 
+async function requireAdmin(req, res, next) {
+    const token = req.cookies.authToken;
+    if (!token) {
+        if (req.accepts('html')) return res.status(403).send('Forbidden: Admins only');
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err) {
+            if (req.accepts('html')) return res.status(403).send('Forbidden: Admins only');
+            return res.status(401).json({ error: "Invalid session" });
+        }
+        if (decoded.role !== 'admin') {
+            if (req.accepts('html')) return res.status(403).send('Forbidden: Admins only');
+            return res.status(403).json({ error: "Forbidden: Admins only" });
+        }
+        req.user = decoded;
+        next();
+    });
+}
+
+// Protect specific HTML files before static serving
+app.get('/dashboard.html', (req, res, next) => {
+    const token = req.cookies.authToken;
+    if (token) {
+        jwt.verify(token, SECRET_KEY, (err, decoded) => {
+            if (!err && decoded.role === 'admin') {
+                return res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+            } else {
+                return res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+            }
+        });
+    } else {
+        return res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+    }
+});
+
+app.get('/admin.html', requireAdmin, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+app.use(express.static(path.join(__dirname, 'public'), { index: false }));
 // ---- API ENDPOINTS ----
 
 app.post('/api/login', async (req, res) => {
@@ -77,10 +132,13 @@ app.get('/api/papers', requireAuth, async (req, res) => {
 
         const query = `
             SELECT p.*, 
+                   COALESCE(ao.teacher_insights, p.teacher_insights) as teacher_insights,
+                   COALESCE(ao.insights_header, p.insights_header) as insights_header,
                    COALESCE(pr.watched_seconds, 0) as watched_seconds, 
                    pr.last_opened
             FROM papers p 
             LEFT JOIN progress pr ON p.id = pr.paper_id AND pr.user_id = $1
+            LEFT JOIN admin_overrides ao ON p.id = ao.paper_id AND ao.user_id = $1
             ${orderByClause}
         `;
         const result = await pool.query(query, [req.user.id]);
@@ -92,7 +150,7 @@ app.get('/api/papers', requireAuth, async (req, res) => {
 
 app.get('/api/dashboard', requireAuth, async (req, res) => {
     try {
-        const userRes = await pool.query('SELECT display_name, email FROM users WHERE id = $1', [req.user.id]);
+        const userRes = await pool.query('SELECT display_name, email, role, upcoming_exam_title, upcoming_exam_subtitle FROM users WHERE id = $1', [req.user.id]);
         const userRow = userRes.rows[0];
 
         const historyQuery = `
@@ -108,9 +166,22 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
         const totalRes = await pool.query('SELECT COUNT(*) as total FROM papers');
         const compRes = await pool.query('SELECT COUNT(*) as completed FROM progress WHERE user_id = $1 AND watched_seconds > 0', [req.user.id]);
 
+        // Fetch Global & Targeted Upcoming Exams
+        const examsQuery = `
+            SELECT id, title, subtitle, exam_date FROM upcoming_exams 
+            WHERE user_id IS NULL OR user_id = $1
+            ORDER BY exam_date ASC NULLS LAST, created_at ASC
+        `;
+        const examsRes = await pool.query(examsQuery, [req.user.id]);
+
         res.json({ 
-            user: { email: userRow.email, display_name: userRow.display_name },
+            user: { 
+                email: userRow.email, 
+                display_name: userRow.display_name, 
+                role: userRow.role
+            },
             history, 
+            upcomingExams: examsRes.rows,
             lastOpened: history[0] || null,
             stats: { 
                 total: parseInt(totalRes.rows[0].total), 
@@ -120,6 +191,13 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+app.get('/api/me', requireAuth, async (req, res) => {
+    try {
+        const userRes = await pool.query('SELECT id, display_name, email, role FROM users WHERE id = $1', [req.user.id]);
+        res.json(userRes.rows[0]);
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.post('/api/progress', requireAuth, async (req, res) => {
@@ -155,6 +233,110 @@ app.post('/api/papers/:id/duration', requireAuth, async (req, res) => {
     }
 });
 
+// Admin Students List
+app.get('/api/admin/students', requireAdmin, async (req, res) => {
+    try {
+        const query = `
+            SELECT u.id, u.display_name, u.email,
+                   COUNT(pr.paper_id) as completed_papers,
+                   MAX(pr.last_opened) as last_active
+            FROM users u
+            LEFT JOIN progress pr ON u.id = pr.user_id AND pr.watched_seconds > 0
+            WHERE u.role = 'student'
+            GROUP BY u.id
+            ORDER BY last_active DESC NULLS LAST
+        `;
+        const result = await pool.query(query);
+        res.json({ students: result.rows });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Admin Papers List (with global insights)
+app.get('/api/admin/papers', requireAdmin, async (req, res) => {
+    try {
+        const query = 'SELECT * FROM papers ORDER BY exam_date DESC, paper DESC';
+        const result = await pool.query(query);
+        res.json({ papers: result.rows });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Admin Update Paper
+app.post('/api/admin/papers/:id', requireAdmin, async (req, res) => {
+    try {
+        const paperId = req.params.id;
+        const { target_student_id, insights_header, teacher_insights } = req.body;
+
+        if (target_student_id === 'all') {
+            await pool.query(`UPDATE papers SET insights_header = $1, teacher_insights = $2 WHERE id = $3`, 
+                [insights_header, teacher_insights, paperId]
+            );
+        } else {
+            await pool.query(`
+                INSERT INTO admin_overrides (user_id, paper_id, insights_header, teacher_insights)
+                VALUES ($1, $2, $3, $4)
+                ON CONFLICT (user_id, paper_id) DO UPDATE 
+                SET insights_header = EXCLUDED.insights_header, teacher_insights = EXCLUDED.teacher_insights
+            `, [target_student_id, paperId, insights_header, teacher_insights]);
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/admin/upcoming-exams', requireAdmin, async (req, res) => {
+    try {
+        const query = `
+            SELECT ue.id, ue.title, ue.subtitle, ue.exam_date, ue.user_id, u.display_name, u.email 
+            FROM upcoming_exams ue
+            LEFT JOIN users u ON ue.user_id = u.id
+            ORDER BY ue.exam_date ASC NULLS LAST, ue.created_at ASC
+        `;
+        const result = await pool.query(query);
+        res.json({ exams: result.rows });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/admin/upcoming-exams', requireAdmin, async (req, res) => {
+    try {
+        const { title, subtitle, exam_date, target_student_id } = req.body;
+        if (target_student_id === 'all') {
+            await pool.query('INSERT INTO upcoming_exams (title, subtitle, exam_date) VALUES ($1, $2, $3)', [title, subtitle, exam_date]);
+        } else {
+            await pool.query('INSERT INTO upcoming_exams (user_id, title, subtitle, exam_date) VALUES ($1, $2, $3, $4)', [target_student_id, title, subtitle, exam_date]);
+        }
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/api/admin/upcoming-exams/:id', requireAdmin, async (req, res) => {
+    try {
+        await pool.query('DELETE FROM upcoming_exams WHERE id = $1', [req.params.id]);
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/admin/upcoming-exams/:id', requireAdmin, async (req, res) => {
+    try {
+        const { title, subtitle, exam_date, target_student_id } = req.body;
+        const uid = target_student_id === 'all' ? null : target_student_id;
+        await pool.query(
+            'UPDATE upcoming_exams SET title = $1, subtitle = $2, exam_date = $3, user_id = $4 WHERE id = $5',
+            [title, subtitle, exam_date, uid, req.params.id]
+        );
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+
+
 // Settings API
 app.post('/api/settings', requireAuth, async (req, res) => {
     try {
@@ -184,7 +366,13 @@ app.post('/api/settings', requireAuth, async (req, res) => {
 });
 
 // Static Route Handling
-app.get(['/dashboard.html', '/video_lessons.html', '/past_papers.html', '/player.html', '/settings.html'], requireAuth, (req, res) => {
+app.get(['/dashboard.html', '/video_lessons.html', '/past_papers.html', '/player.html', '/settings.html', '/admin.html'], requireAuth, (req, res) => {
+    if (req.path === '/past_papers.html' && req.user.role === 'admin') {
+        return res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+    }
+    if (req.path === '/admin.html' && req.user.role !== 'admin') {
+        return res.redirect('/dashboard.html');
+    }
     res.sendFile(path.join(__dirname, 'public', req.path));
 });
 

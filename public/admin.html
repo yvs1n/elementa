@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Atelier - Admin Command Center</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container relative">
+    
+    <!-- SideNavBar -->
+    <aside class="bg-[#f1f4f6] dark:bg-[#1a1f24] font-manrope tracking-tight leading-relaxed h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 hidden lg:flex flex-col py-12 border-r border-surface-container-highest/20">
+        <div class="px-8 mb-12">
+            <h1 class="text-xl font-light tracking-[0.2em] uppercase text-[#2b3437] dark:text-[#f8f9fa]">Atelier</h1>
+            <p class="text-xs text-on-surface-variant tracking-widest mt-1 opacity-70">Admin Center</p>
+        </div>
+        <nav class="flex-1 flex flex-col gap-1 px-2">
+            <a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl" href="dashboard.html">
+                <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl" href="video_lessons.html">
+                <span class="material-symbols-outlined" data-icon="school">school</span>
+                <span class="text-sm font-medium">Video Lessons</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- TopAppBar -->
+    <header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-20 z-40 bg-[#f8f9fa]/80 dark:bg-[#0d1117]/80 backdrop-blur-xl flex justify-between items-center px-6 lg:px-12 transition-all border-b border-surface-container-highest/10">
+        <div class="flex items-center gap-3 lg:gap-6">
+            <span class="text-[0.6rem] lg:text-xs uppercase tracking-[0.3em] text-on-surface-variant font-bold opacity-60 hidden sm:inline">Admin</span>
+            <div class="h-4 w-px bg-outline-variant opacity-20 hidden sm:block"></div>
+            <span class="text-xs lg:text-sm font-bold text-on-surface">Instructor Oversight</span>
+        </div>
+        <div class="flex items-center gap-3 lg:gap-8" id="header-actions"></div>
+    </header>
+
+    <!-- Main Content Canvas -->
+    <main class="ml-0 lg:ml-64 pt-20 min-h-screen bg-background">
+        <div class="max-w-6xl mx-auto px-6 lg:px-12 py-12 lg:py-16 space-y-12">
+            
+            <!-- Welcome Header -->
+            <div class="flex flex-col gap-2">
+                <h1 class="text-3xl lg:text-5xl font-bold tracking-tight text-on-surface leading-tight">Command Center</h1>
+                <p class="text-on-surface-variant text-sm lg:text-base max-w-xl">Oversee student progress and curate personalized insights for upcoming exams.</p>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Students Card -->
+                <div class="bg-surface-container-low border border-surface-container-highest/30 rounded-3xl p-8 flex flex-col h-full shadow-sm">
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-primary mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">group</span>
+                        Student Roster
+                    </h3>
+                    <div id="admin-students-list" class="flex flex-col gap-4 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+                        <p class="text-sm opacity-50 italic">Loading students...</p>
+                    </div>
+                </div>
+
+                <!-- Editing Papers Card -->
+                <div class="bg-surface-container-low border border-surface-container-highest/30 rounded-3xl p-8 flex flex-col h-full shadow-sm">
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-primary mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">edit_document</span>
+                        Exam Content Library
+                    </h3>
+                    <div class="mb-4 relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 cursor-text z-0 text-sm">search</span>
+                        <input id="admin-paper-search" type="text" placeholder="Search exams to edit..." class="w-full bg-surface-container-high/30 border border-surface-container-highest/50 rounded-xl px-10 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-on-surface placeholder:text-on-surface-variant/50 transition-all font-manrope z-10 relative">
+                    </div>
+                    <div id="admin-papers-list" class="flex flex-col gap-4 overflow-y-auto max-h-[250px] pr-2 custom-scrollbar">
+                        <p class="text-sm opacity-50 italic">Loading library...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Editor Modal -->
+    <div id="paper-editor-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-surface-container-lowest w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-white/10 transform transition-all scale-95 opacity-0">
+            <!-- Modal Header -->
+            <div class="px-8 py-6 border-b border-surface-container-highest/30 flex justify-between items-center bg-surface-container-low/50">
+                <h3 class="font-bold text-lg text-on-surface" id="editor-modal-title">Edit Exam Details</h3>
+                <button id="editor-close-btn" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <form id="editor-form" class="px-8 py-6 flex flex-col gap-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <input type="hidden" id="editor-paper-id">
+                
+                <div class="px-4 py-3 bg-error/5 text-error rounded-xl border border-error/20 flex gap-3 text-xs mb-2">
+                    <span class="material-symbols-outlined text-[1rem]">lock</span>
+                    <p>Core exam metadata (Title, Series, Date) is locked to preserve the platform's filtering integrity and student history. You may only assign specialized target insights.</p>
+                </div>
+
+                <div class="h-px bg-surface-container-highest/30 w-full my-2"></div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-secondary">
+                        <span class="material-symbols-outlined text-xl">person_search</span>
+                        <h4 class="text-sm font-bold uppercase tracking-widest">Target Insights</h4>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="text-[0.65rem] font-bold uppercase tracking-wider text-on-surface-variant">Apply To Student</label>
+                        <select id="editor-target-student" class="w-full bg-surface border border-surface-container-highest rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary text-on-surface">
+                            <option value="all">Global (All Students)</option>
+                            <!-- Dynamically populated -->
+                        </select>
+                        <p class="text-[0.65rem] opacity-60 mt-1">Select a specific student to create an override. Select Global to update the default insights.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[0.65rem] font-bold uppercase tracking-wider text-on-surface-variant">Insight Header</label>
+                        <input type="text" id="editor-insight-header" placeholder="e.g., Teacher's Insights" class="w-full bg-surface border border-surface-container-highest rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary italic">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[0.65rem] font-bold uppercase tracking-wider text-on-surface-variant">Insight Content</label>
+                        <textarea id="editor-insight-content" rows="4" placeholder="Add specific guidance or tips..." class="w-full bg-surface border border-surface-container-highest rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary italic"></textarea>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Modal Footer -->
+            <div class="px-8 py-6 border-t border-surface-container-highest/30 bg-surface-container-low/50 flex justify-end gap-3">
+                <button type="button" id="editor-cancel-btn" class="px-6 py-2 rounded-xl text-sm font-bold hover:bg-surface-container-high transition-colors">Cancel</button>
+                <button type="button" id="editor-save-btn" class="px-6 py-2 bg-primary text-on-primary rounded-xl text-sm font-bold shadow-lg hover:shadow-primary/30 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">save</span>
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] left-[-5%] w-[40%] h-[60%] rounded-full bg-primary/5 blur-[120px]"></div>
+    </div>
+</body>
+</html>

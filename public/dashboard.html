@@ -92,14 +92,16 @@
                         </section>
                     </div>
                     
-                    <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-surface-container-highest/10 hover:border-primary/20 transition-all cursor-pointer">
-                        <h4 class="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-on-surface-variant mb-6">Upcoming Exams</h4>
-                        <div class="flex items-center gap-4">
-                            <div class="flex flex-col">
-                                <h5 class="text-xl font-bold text-primary">June 2025</h5>
-                                <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest opacity-60">Syllabus Cycle 4</p>
+                    <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-surface-container-highest/10 hover:border-primary/20 transition-all cursor-pointer flex flex-col max-h-[250px]">
+                        <h4 class="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-on-surface-variant mb-6 shrink-0">Upcoming Exams</h4>
+                        <div id="upcoming-exams-list" class="flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-2 flex-1">
+                            <div class="flex items-center gap-4">
+                                <div class="flex flex-col">
+                                    <h5 class="text-xl font-bold text-primary">Loading...</h5>
+                                    <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest opacity-60">Please wait</p>
+                                </div>
+                                <span class="ml-auto material-symbols-outlined text-primary/40">calendar_month</span>
                             </div>
-                            <span class="ml-auto material-symbols-outlined text-primary/40">calendar_month</span>
                         </div>
                     </div>
                 </div>

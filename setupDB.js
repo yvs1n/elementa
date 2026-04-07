@@ -46,7 +46,9 @@ async function setup() {
                 video_url TEXT,
                 pdf_url TEXT,
                 ms_url TEXT,
-                ma_url TEXT
+                ma_url TEXT,
+                teacher_insights TEXT,
+                insights_header TEXT
             )
         `);
 
@@ -58,6 +60,18 @@ async function setup() {
                 watched_seconds INTEGER DEFAULT 0,
                 last_opened TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (user_id, paper_id)
+            )
+        `);
+
+        // 4. Admin Overrides Table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS admin_overrides (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                paper_id INTEGER REFERENCES papers(id) ON DELETE CASCADE,
+                teacher_insights TEXT,
+                insights_header TEXT,
+                UNIQUE(user_id, paper_id)
             )
         `);
 
@@ -90,7 +104,7 @@ async function setup() {
             "Jan 2022 1P", "Jan 2022 2P", "Jan 2022 1PR", "Jan 2022 2PR", "June 2022 1P", "June 2022 2P", "June 2022 1PR", "June 2022 2PR", 
             "Jan 2023 1P", "Jan 2023 2P", "Jan 2023 1PR", "Jan 2023 2PR", "June 2023 1P", "June 2023 2P", "June 2023 1PR", "June 2023 2PR", "Oct 2023 1P", "Oct 2023 2P", 
             "June 2024 1PR", "June 2024 2PR", "Oct 2024 1P", "Oct 2024 2P", 
-            "June 2025 1P", "June 2025 2P", "June 2025 1PR", "June 2025 2PR", "June 2025 U1R",
+            "June 2025 1P", "June 2025 2P", "June 2025 1PR", "June 2025 2PR", "June 2025 1PR",
             "Oct 2025 1P", "Oct 2025 2P", "Oct 2025 1PR", "Oct 2025 2PR"
         ];
 
@@ -99,13 +113,16 @@ async function setup() {
         ];
 
         const mnthMap = { "Jan": "01", "June": "06", "Oct": "10" };
-        const pprMap = { "1P": "01", "1PR": "02", "U1R": "02", "2P": "03", "2PR": "04", "U2R": "04" };
+        const pprMap = { "1P": "01", "1PR": "02", "2P": "03", "2PR": "04" };
 
         const insertPaperQuery = `
-            INSERT INTO papers (title, series, paper, exam_date, duration_seconds, video_url) 
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO papers (title, series, paper, exam_date, duration_seconds, video_url, pdf_url, ms_url, ma_url) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             ON CONFLICT (title) DO UPDATE SET 
                 video_url = EXCLUDED.video_url,
+                pdf_url = EXCLUDED.pdf_url,
+                ms_url = EXCLUDED.ms_url,
+                ma_url = EXCLUDED.ma_url,
                 series = EXCLUDED.series,
                 paper = EXCLUDED.paper,
                 exam_date = EXCLUDED.exam_date
@@ -121,8 +138,13 @@ async function setup() {
             const title = `Paper ${paperIdnt} - ${series}`;
             const examDate = `${year}-${mnthMap[month] || "01"}-${pprMap[paperIdnt] || "01"}`;
             const video = videoPool[i % videoPool.length];
+            
+            // Resources Placeholders
+            const pdf = `/resources/${year}-${month}-${paperIdnt}.pdf`;
+            const ms = `/resources/${year}-${month}-${paperIdnt}-ms.pdf`;
+            const ma = `/resources/${year}-${month}-${paperIdnt}-ma.pdf`;
 
-            await client.query(insertPaperQuery, [title, series, paperIdnt, examDate, 0, video]);
+            await client.query(insertPaperQuery, [title, series, paperIdnt, examDate, 0, video, pdf, ms, ma]);
         }
 
         await client.query('COMMIT');

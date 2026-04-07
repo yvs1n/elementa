@@ -1,85 +1,215 @@
 <!DOCTYPE html>
 
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Atelier - Physics Solutions</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="script.js"></script>
-<link rel="stylesheet" href="styles.css">
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Atelier - Physics Solutions</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container">
-<!-- SideNavBar (Unified) -->
-<aside class="bg-[#f1f4f6] dark:bg-[#1a1f24] font-manrope tracking-tight leading-relaxed h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 hidden lg:flex flex-col py-12 border-r border-surface-container-highest/20">
-<div class="px-8 mb-12">
-<h1 class="text-xl font-light tracking-[0.2em] uppercase text-[#2b3437] dark:text-[#f8f9fa]">Atelier</h1>
-<p class="text-xs text-on-surface-variant tracking-widest mt-1 opacity-70">Physics Hub</p>
-</div>
-<nav class="flex-1 flex flex-col gap-1 px-2">
-<a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl" href="dashboard.html">
-<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
-<span class="text-sm font-medium">Dashboard</span>
-</a>
-<a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl" href="video_lessons.html">
-<span class="material-symbols-outlined" data-icon="school">school</span>
-<span class="text-sm font-medium">Video Lessons</span>
-</a>
-<a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl" href="past_papers.html">
-<span class="material-symbols-outlined" data-icon="archive">archive</span>
-<span class="text-sm font-medium">Past Papers</span>
-</a>
-</nav>
-</aside>
-<!-- TopAppBar Shell -->
-<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-20 z-40 bg-[#f8f9fa]/80 dark:bg-[#0d1117]/80 backdrop-blur-xl flex justify-between items-center px-6 lg:px-12 transition-all border-b border-surface-container-highest/10">
-<div class="flex items-center gap-3 lg:gap-6">
-<span class="text-[0.6rem] lg:text-xs uppercase tracking-[0.3em] text-on-surface-variant font-bold opacity-60 hidden sm:inline">IGCSE Revision</span>
-<div class="h-4 w-px bg-outline-variant opacity-20 hidden sm:block"></div>
-<span id="top-subtitle" class="text-xs lg:text-sm font-bold text-on-surface truncate max-w-[150px] lg:max-w-none">Loading Series...</span>
-</div>
-<div class="flex items-center gap-3 lg:gap-8" id="header-actions">
-</div>
-</header>
-<!-- Main Content Canvas -->
-<main class="ml-0 lg:ml-64 pt-20 min-h-screen bg-background">
-<div class="max-w-6xl mx-auto px-6 lg:px-12 py-12 lg:py-16">
-                <!-- Hero Video Player Section -->
+    <!-- SideNavBar (Unified) -->
+    <aside
+        class="bg-[#f1f4f6] dark:bg-[#1a1f24] font-manrope tracking-tight leading-relaxed h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 hidden lg:flex flex-col py-12 border-r border-surface-container-highest/20">
+        <div class="px-8 mb-12">
+            <h1 class="text-xl font-light tracking-[0.2em] uppercase text-[#2b3437] dark:text-[#f8f9fa]">Atelier</h1>
+            <p class="text-xs text-on-surface-variant tracking-widest mt-1 opacity-70">Physics Hub</p>
+        </div>
+        <nav class="flex-1 flex flex-col gap-1 px-2">
+            <a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl"
+                href="dashboard.html">
+                <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl"
+                href="video_lessons.html">
+                <span class="material-symbols-outlined" data-icon="school">school</span>
+                <span class="text-sm font-medium">Video Lessons</span>
+            </a>
+            <a class="flex items-center gap-4 px-6 py-4 text-[#586064] dark:text-[#abb3b7] hover:bg-[#ffffff]/50 dark:hover:bg-[#2b3437]/50 transition-all duration-300 scale-100 active:scale-[0.99] rounded-xl"
+                href="past_papers.html">
+                <span class="material-symbols-outlined" data-icon="archive">archive</span>
+                <span class="text-sm font-medium">Past Papers</span>
+            </a>
+        </nav>
+    </aside>
+    <!-- TopAppBar Shell -->
+    <header
+        class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-20 z-40 bg-[#f8f9fa]/80 dark:bg-[#0d1117]/80 backdrop-blur-xl flex justify-between items-center px-6 lg:px-12 transition-all border-b border-surface-container-highest/10">
+        <div class="flex items-center gap-3 lg:gap-6">
+            <span
+                class="text-[0.6rem] lg:text-xs uppercase tracking-[0.3em] text-on-surface-variant font-bold opacity-60 hidden sm:inline">IGCSE
+                Revision</span>
+            <div class="h-4 w-px bg-outline-variant opacity-20 hidden sm:block"></div>
+            <span id="top-subtitle"
+                class="text-xs lg:text-sm font-bold text-on-surface truncate max-w-[150px] lg:max-w-none">Loading
+                Series...</span>
+        </div>
+        <div class="flex items-center gap-3 lg:gap-8" id="header-actions">
+        </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="ml-0 lg:ml-64 pt-20 min-h-screen bg-background">
+        <div class="max-w-6xl mx-auto px-6 lg:px-12 py-12 lg:py-16">
+            <!-- Hero Video Player Section -->
+            <section class="mb-12 lg:mb-20">
                 <section class="mb-12 lg:mb-20">
-                    <div id="player-wrapper" class="relative aspect-video rounded-3xl lg:rounded-[2rem] overflow-hidden bg-[#0d1117] shadow-xl flex items-center justify-center">
-                        <video id="main-video" class="w-full h-full" controls crossorigin="anonymous" playsinline></video>
-                    </div>
-                    <div class="mt-4 flex justify-end">
-                        <span id="time-duration" class="text-[0.65rem] font-bold tracking-widest text-on-surface-variant uppercase bg-surface-container px-3 py-1 rounded-full">0:00</span>
+                    <div id="player-wrapper"
+                        class="relative group aspect-video rounded-3xl lg:rounded-[2rem] overflow-hidden bg-[#000] shadow-2xl flex items-center justify-center">
+                        <video id="main-video" class="w-full h-full cursor-pointer" crossorigin="anonymous"
+                            playsinline></video>
+
+                        <!-- Premium Control Overlay -->
+                        <div id="player-overlay"
+                            class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                            <div id="central-play-icon"
+                                class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 scale-75 transition-all duration-300">
+                                <span class="material-symbols-outlined text-white text-5xl"
+                                    style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                            </div>
+                            <!-- x2 Speed Indicator -->
+                            <div id="speed-indicator"
+                                class="absolute top-8 right-8 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full text-white text-[0.65rem] font-bold tracking-[0.2em] uppercase opacity-0 transition-opacity">
+                                2.0x Speed
+                            </div>
+                        </div>
+
+                        <!-- Bottom Control Bar -->
+                        <div id="custom-controls"
+                            class="absolute bottom-0 left-0 right-0 p-6 lg:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-500 opacity-0 group-hover:opacity-100 flex flex-col gap-6 z-20">
+                            <!-- Progress Container -->
+                            <div id="progress-container"
+                                class="relative w-full h-1.5 bg-white/20 rounded-full cursor-pointer group/progress transition-all hover:h-2.5">
+                                <div id="progress-bar" class="absolute left-0 top-0 h-full bg-primary rounded-full w-0">
+                                </div>
+                                <div id="progress-thumb"
+                                    class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-xl opacity-0 group-hover/progress:opacity-100 transition-opacity"
+                                    style="left: 0%"></div>
+                            </div>
+
+                            <div class="flex items-center justify-between text-white">
+                                <div class="flex items-center gap-4 lg:gap-8">
+                                    <button id="play-pause"
+                                        class="w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform active:scale-95">
+                                        <span class="material-symbols-outlined text-4xl"
+                                            style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                                    </button>
+
+                                    <div class="flex items-center gap-3 group/volume">
+                                        <button id="volume-toggle">
+                                            <span class="material-symbols-outlined text-2xl">volume_up</span>
+                                        </button>
+                                        <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1"
+                                            class="w-0 group-hover/volume:w-24 transition-all opacity-0 group-hover/volume:opacity-100 accent-primary cursor-pointer h-1" />
+                                    </div>
+
+                                    <div class="text-[0.7rem] font-bold tracking-widest uppercase opacity-80 font-mono">
+                                        <span id="current-time">0:00</span> <span class="mx-1 opacity-30">/</span> <span
+                                            id="total-duration">0:00</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-6">
+                                    <div id="speed-menu" class="relative group/speed">
+                                        <button id="speed-btn"
+                                            class="px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg text-[0.65rem] font-bold tracking-widest transition-all">1.0x</button>
+                                        <div
+                                            class="absolute bottom-full right-0 mb-4 bg-surface-container-lowest/10 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden opacity-0 invisible group-hover/speed:opacity-100 group-hover/speed:visible transition-all">
+                                            <button data-speed="0.5"
+                                                class="speed-opt block w-full px-4 py-2 text-[0.6rem] font-bold text-white hover:bg-primary transition-colors text-right">0.5x</button>
+                                            <button data-speed="1"
+                                                class="speed-opt block w-full px-4 py-2 text-[0.6rem] font-bold text-white hover:bg-primary transition-colors text-right">1.0x</button>
+                                            <button data-speed="1.5"
+                                                class="speed-opt block w-full px-4 py-2 text-[0.6rem] font-bold text-white hover:bg-primary transition-colors text-right">1.5x</button>
+                                            <button data-speed="2"
+                                                class="speed-opt block w-full px-4 py-2 text-[0.6rem] font-bold text-white hover:bg-primary transition-colors text-right">2.0x</button>
+                                        </div>
+                                    </div>
+                                    <button id="fullscreen-toggle"
+                                        class="w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform active:scale-95">
+                                        <span class="material-symbols-outlined text-3xl">fullscreen</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
-<!-- Lesson Details Grid -->
-<div class="grid grid-cols-12 gap-8 lg:gap-12 items-start">
-<!-- Left Content -->
-<div class="col-span-12 lg:col-span-7">
-<div class="mb-2">
-<span class="text-[0.6rem] lg:text-[0.65rem] uppercase tracking-[0.4em] font-bold text-primary">Paper Solution</span>
-</div>
-<h2 id="lesson-title" class="text-3xl lg:text-5xl font-bold tracking-tight text-on-surface mb-6 leading-tight">Loading...</h2>
-<p id="lesson-desc" class="text-base lg:text-lg leading-relaxed text-on-surface-variant font-light max-w-prose opacity-80">Please wait.</p>
-</div>
-<!-- Right Content -->
-<div id="lesson-sidebar" class="col-span-12 lg:col-span-5 flex flex-col gap-12 lg:pl-12 lg:border-l lg:border-surface-container-highest/30">
-</div>
-</div>
-<!-- Focus Bottom Sheet -->
-<div class="mt-20 lg:mt-32 p-8 lg:p-12 rounded-3xl bg-surface-container-low/50 flex flex-col items-center text-center border border-surface-container-highest/20">
-<span class="material-symbols-outlined text-outline-variant/20 text-5xl mb-4" data-icon="science">science</span>
-<p class="text-xs lg:text-sm text-on-surface-variant font-bold max-w-sm uppercase tracking-widest opacity-40">
-                A* Physics Mastery Tracking
-            </p>
-</div>
-</div>
-</main>
-<!-- Background Decoration -->
-<div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
-<div class="absolute top-[-10%] right-[-5%] w-[40%] h-[60%] rounded-full bg-primary/5 blur-[120px]"></div>
-<div class="absolute bottom-[-5%] left-[20%] w-[30%] h-[50%] rounded-full bg-secondary/5 blur-[100px]"></div>
-</div>
-</body></html>
+                <!-- Lesson Details Grid -->
+                <div class="grid grid-cols-12 gap-8 lg:gap-12 items-start">
+                    <!-- Left Content -->
+                    <div class="col-span-12 lg:col-span-7">
+                        <div class="mb-2">
+                            <span
+                                class="text-[0.6rem] lg:text-[0.65rem] uppercase tracking-[0.4em] font-bold text-primary">Paper
+                                Solution</span>
+                        </div>
+                        <h2 id="lesson-title"
+                            class="text-3xl lg:text-5xl font-bold tracking-tight text-on-surface mb-2 leading-tight">
+                            Loading...</h2>
+                        <div class="flex items-center gap-2 mb-8 opacity-50">
+                            <span class="material-symbols-outlined text-sm">person</span>
+                            <span class="text-[0.6rem] font-bold uppercase tracking-[0.2em]">Made by MR.Yassin</span>
+                        </div>
+                        <div class="space-y-10">
+                            <p id="lesson-desc"
+                                class="text-base lg:text-lg leading-relaxed text-on-surface-variant font-light max-w-prose opacity-80">
+                                Please wait.</p>
+
+                            <!-- Teacher Insights Card -->
+                            <div id="teacher-notes-container"
+                                class="p-6 lg:p-8 bg-primary/5 rounded-[2rem] border border-primary/10 transition-all opacity-0 transform translate-y-4">
+                                <div class="flex items-center gap-3 text-primary mb-4">
+                                    <span class="material-symbols-outlined">lightbulb</span>
+                                    <span class="text-[0.65rem] font-bold uppercase tracking-[0.3em]">Teacher's
+                                        Insights</span>
+                                </div>
+                                <p id="teacher-notes"
+                                    class="text-sm lg:text-base text-on-surface-variant font-light italic leading-relaxed">
+                                    Please wait for teacher's insights...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Content -->
+                    <div id="lesson-sidebar"
+                        class="col-span-12 lg:col-span-5 flex flex-col gap-6 lg:pl-12 lg:border-l lg:border-surface-container-highest/30">
+                        <!-- Navigation Control Card -->
+                        <div id="player-nav-container"
+                            class="bg-surface-container-low/40 backdrop-blur-sm rounded-3xl p-8 border border-white/5 transition-all duration-500 opacity-0 transform translate-y-4">
+                        </div>
+
+                        <!-- Downloadable Resources Card -->
+                        <div id="player-resources-container"
+                            class="bg-surface-container-low/40 backdrop-blur-sm rounded-3xl p-8 border border-white/5 transition-all duration-500 opacity-0 transform translate-y-4">
+                        </div>
+                    </div>
+                </div>
+                <!-- Focus Bottom Sheet -->
+                <div
+                    class="mt-20 lg:mt-32 p-8 lg:p-12 rounded-3xl bg-surface-container-low/50 flex flex-col items-center text-center border border-surface-container-highest/20">
+                    <span class="material-symbols-outlined text-outline-variant/20 text-5xl mb-4"
+                        data-icon="science">science</span>
+                    <p
+                        class="text-xs lg:text-sm text-on-surface-variant font-bold max-w-sm uppercase tracking-widest opacity-40">
+                        A* Physics Mastery Tracking
+                    </p>
+                </div>
+        </div>
+    </main>
+    <!-- Background Decoration -->
+    <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] right-[-5%] w-[40%] h-[60%] rounded-full bg-primary/5 blur-[120px]"></div>
+        <div class="absolute bottom-[-5%] left-[20%] w-[30%] h-[50%] rounded-full bg-secondary/5 blur-[100px]"></div>
+    </div>
+</body>
+
+</html>
