@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Mobile Navigation & Header Fixes
     const headerActions = document.getElementById('header-actions');
-    const headerLeft = document.querySelector('header div.flex.items-center.gap-4');
+    const headerLeft = document.querySelector('header .flex.items-center');
     
     if (headerLeft) {
         const hamburger = document.createElement('button');
@@ -195,6 +195,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             <a href="past_papers.html" class="mobile-nav-link flex items-center gap-6 p-6 rounded-2xl text-xl font-bold tracking-tight text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all">
                 <span class="material-symbols-outlined text-3xl">folder_open</span> Past Papers
             </a>
+            ${(window.globalUser && window.globalUser.role === 'admin') ? `
+            <a href="admin.html" class="mobile-nav-link flex items-center gap-6 p-6 rounded-2xl text-xl font-bold tracking-tight text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-3xl">admin_panel_settings</span> Command Center
+            </a>
+            ` : ''}
             <a href="settings.html" class="mobile-nav-link flex items-center gap-6 p-6 rounded-2xl text-xl font-bold tracking-tight text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all">
                 <span class="material-symbols-outlined text-3xl">settings</span> Settings
             </a>
@@ -544,9 +549,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         const displayPage = () => {
+            const isMobile = window.innerWidth < 1024;
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
-            const pagePapers = allPapers.slice(start, end);
+            const pagePapers = isMobile ? allPapers : allPapers.slice(start, end);
             
             lessonsGrid.innerHTML = '';
             
