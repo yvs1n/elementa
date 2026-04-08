@@ -577,11 +577,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="group cursor-pointer" onclick="window.location.href='player.html?id=${item.id}'">
                         <div class="aspect-video bg-surface-container border border-surface-container-highest/20 rounded-xl mb-4 relative overflow-hidden transition-transform duration-500 hover:-translate-y-1">
                             <img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80" class="w-full h-full object-cover mix-blend-luminosity opacity-50 group-hover:scale-105 transition-transform duration-700"/>
-                            <span class="absolute bottom-3 right-3 bg-surface-container-highest/80 backdrop-blur-sm text-on-surface px-2 py-1 rounded text-xs font-bold tracking-wider">${p}%</span>
+                            <span class="progress-percentage-text absolute bottom-3 right-3 bg-surface-container-highest/80 backdrop-blur-sm text-on-surface px-2 py-1 rounded text-xs font-bold tracking-wider">${p}%</span>
                             <div class="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                  <span class="material-symbols-outlined text-white scale-150" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
                             </div>
-                            <div class="w-full absolute bottom-0 bg-surface/30 h-1"><div class="bg-primary h-full" style="width: ${p}%"></div></div>
                         </div>
                         <div>
                             <h4 class="text-sm font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">${item.title}</h4>
@@ -683,10 +682,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                         <div class="absolute top-0 left-0 right-0 p-4">
                             <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
-                                <div class="bg-primary h-full" style="width: ${prog}%"></div>
+                                <div class="progress-bar-inner bg-primary h-full transition-all duration-1000" style="width: ${prog}%"></div>
                             </div>
                         </div>
-                        <span class="absolute bottom-4 right-4 bg-surface-container-lowest/90 backdrop-blur-md text-on-surface px-2 py-1 rounded text-[0.6rem] font-bold tracking-widest uppercase">${prog}% Done</span>
+                        <span class="progress-percentage-text absolute bottom-4 right-4 bg-surface-container-lowest/90 backdrop-blur-md text-on-surface px-2 py-1 rounded text-[0.6rem] font-bold tracking-widest uppercase">${prog}% Done</span>
                     </div>
                     <h3 class="text-sm font-bold tracking-tight text-on-surface mb-1 group-hover:text-primary transition-colors">${paper.title}</h3>
                     <p class="duration-label text-on-surface-variant font-medium text-[0.65rem] uppercase tracking-widest">${paper.duration_seconds > 0 ? formatMins(paper.duration_seconds) : 'Loading duration...'}</p>
@@ -703,7 +702,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                         video.addEventListener('loadedmetadata', () => {
                             if (video.duration) {
                                 label.textContent = `${formatMins(video.duration)} duration`;
-                                if (!paper.duration_seconds) {
+                                
+                                // Sync logic: Trust the current video file duration as the source of truth
+                                const effectiveDuration = video.duration;
+                                
+                                // Live update the progress bar in the UI
+                                const progBar = card.querySelector('.progress-bar-inner');
+                                const progText = card.querySelector('.progress-percentage-text');
+                                if (progBar && progText) {
+                                    const newProg = formatProgress(paper.watched_seconds, effectiveDuration);
+                                    progBar.style.width = `${newProg}%`;
+                                    progText.textContent = `${newProg}% Done`;
+                                }
+
+                                // Database update: Only overwrite if duration is significantly different (to avoid jitter)
+                                if (!paper.duration_seconds || Math.abs(video.duration - paper.duration_seconds) > 1) {
+                                    paper.duration_seconds = video.duration; // Update local memory too
                                     fetch(`/api/papers/${paper.id}/duration`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ durationSeconds: video.duration }) }).catch(()=>null);
                                 }
                             }
@@ -980,6 +994,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 durationEle.textContent = formatMins(video.duration);
                 if (paper.watched_seconds > 0 && video.currentTime === 0) {
                     video.currentTime = paper.watched_seconds;
+                }
+                
+                // Duration Sync: Fix record if video file differs from database
+                if (video.duration && (!paper.duration_seconds || Math.abs(video.duration - paper.duration_seconds) > 1)) {
+                    fetch(`/api/papers/${paper.id}/duration`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ durationSeconds: video.duration }) }).catch(()=>null);
                 }
             };
 

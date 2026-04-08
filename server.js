@@ -267,7 +267,7 @@ app.post('/api/papers/:id/duration', requireAuth, async (req, res) => {
         if (!durationSeconds || durationSeconds <= 0) return res.json({ success: false });
 
         const result = await pool.query(
-            'UPDATE papers SET duration_seconds = $1 WHERE id = $2 AND duration_seconds = 0',
+            'UPDATE papers SET duration_seconds = $1 WHERE id = $2',
             [Math.round(durationSeconds), paperId]
         );
         res.json({ success: true, updated: result.rowCount > 0 });
