@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Elementa | Complete Design System &amp; Developer Specification</title>
+    <meta name="description" content="Comprehensive design system, UI specification, and developer implementation guide for the Elementa educational platform." />
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <!-- Tailwind CSS with Forms & Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Typography: Manrope & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#5d5d78",
+                        "error-container": "#fe8983",
+                        "surface-container": "#eaeff1",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f8f9fa",
+                        "outline-variant": "#abb3b7",
+                        "inverse-surface": "#0c0f10",
+                        "on-tertiary": "#fbf7ff",
+                        "secondary-fixed-dim": "#d3d4db",
+                        "surface-container-low": "#f1f4f6",
+                        "tertiary-container": "#d9d7f8",
+                        "error-dim": "#4e0309",
+                        "on-primary-fixed": "#254067",
+                        "primary-fixed": "#d6e3ff",
+                        "inverse-primary": "#b3cdfd",
+                        "secondary": "#5d5f65",
+                        "secondary-fixed": "#e1e2e9",
+                        "on-tertiary-container": "#4a4a65",
+                        "surface-container-high": "#e3e9ec",
+                        "on-error-container": "#752121",
+                        "primary-dim": "var(--primary-dim)",
+                        "primary-container": "var(--primary-container)",
+                        "surface-tint": "#455f88",
+                        "surface-dim": "#d1dce0",
+                        "on-primary-container": "var(--on-primary-container)",
+                        "primary": "var(--primary)",
+                        "on-secondary-fixed": "#3d3f45",
+                        "on-surface": "#2b3437",
+                        "error": "#9f403d",
+                        "tertiary-fixed-dim": "#cbc9e9",
+                        "primary-fixed-dim": "#bfd5ff",
+                        "on-tertiary-fixed": "#373851",
+                        "on-background": "#2b3437",
+                        "on-primary-fixed-variant": "#425c85",
+                        "on-secondary": "#f8f8ff",
+                        "secondary-dim": "#515359",
+                        "on-surface-variant": "#586064",
+                        "surface": "#f8f9fa",
+                        "on-secondary-fixed-variant": "#5a5b61",
+                        "on-tertiary-fixed-variant": "#54546f",
+                        "outline": "#737c7f",
+                        "secondary-container": "#e1e2e9",
+                        "surface-bright": "#f8f9fa",
+                        "tertiary-dim": "#51516c",
+                        "surface-variant": "#dbe4e7",
+                        "on-secondary-container": "#505257",
+                        "surface-container-highest": "#dbe4e7",
+                        "tertiary-fixed": "#d9d7f8",
+                        "on-error": "#fff7f6",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-primary": "var(--on-primary)"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    fontFamily: {
+                        headline: ["Manrope", "sans-serif"],
+                        body: ["Manrope", "sans-serif"],
+                        label: ["Manrope", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        /* Custom documentation specific helpers */
+        .code-block {
+            background-color: #12161a;
+            color: #d8e2ec;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.6;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+        .code-block pre {
+            padding: 1.25rem;
+            overflow-x: auto;
+        }
+        .copy-chip {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .copy-chip:active {
+            transform: scale(0.96);
+        }
+        .spec-nav-link.active {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            font-weight: 700;
+        }
+        html.dark .code-block {
+            background-color: #080b0e;
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface transition-colors duration-300 antialiased selection:bg-primary-container selection:text-on-primary-container" data-subject="Physics">
+
+    <!-- Top Design System App Bar -->
+    <header class="fixed top-0 left-0 right-0 h-20 z-50 bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-xl border-b border-surface-container-highest/20 px-6 lg:px-12 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="dashboard.html" class="flex items-center gap-3 group" title="Return to Elementa Dashboard">
+                <img src="logo.png" alt="Elementa Logo" class="w-8 h-8 rounded-lg object-contain" />
+                <div class="flex flex-col">
+                    <span class="text-sm font-light tracking-[0.25em] uppercase text-on-surface group-hover:text-primary transition-colors">Elementa</span>
+                    <span class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-primary">Design System &amp; Spec</span>
+                </div>
+            </a>
+            <div class="h-5 w-px bg-outline-variant/30 hidden sm:block"></div>
+            <span class="text-[0.65rem] font-bold text-on-surface-variant uppercase tracking-widest hidden sm:inline-block opacity-70">Single Source of Truth v2.5</span>
+        </div>
+
+        <div class="flex items-center gap-3 lg:gap-6">
+            <!-- Active Subject Themer Pill -->
+            <div class="hidden md:flex items-center bg-surface-container rounded-full p-1 border border-surface-container-highest/40">
+                <span class="text-[0.6rem] font-black uppercase tracking-widest text-on-surface-variant px-3">Subject Theme:</span>
+                <button onclick="setPreviewSubject('Physics')" id="sub-btn-Physics" class="px-3 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-wider transition-all bg-primary text-on-primary shadow-sm">Physics</button>
+                <button onclick="setPreviewSubject('Math')" id="sub-btn-Math" class="px-3 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-wider transition-all text-on-surface hover:bg-surface-container-high">Math</button>
+                <button onclick="setPreviewSubject('Biology')" id="sub-btn-Biology" class="px-3 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-wider transition-all text-on-surface hover:bg-surface-container-high">Biology</button>
+                <button onclick="setPreviewSubject('Chemistry')" id="sub-btn-Chemistry" class="px-3 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-wider transition-all text-on-surface hover:bg-surface-container-high">Chemistry</button>
+            </div>
+
+            <!-- Light / Dark Mode Toggle Button -->
+            <button onclick="toggleThemeMode()" class="w-10 h-10 rounded-xl bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-all border border-surface-container-highest/20" title="Toggle Light / Dark Mode" aria-label="Toggle Light and Dark Mode">
+                <span class="material-symbols-outlined text-lg" id="theme-icon">dark_mode</span>
+            </button>
+
+            <a href="dashboard.html" class="px-4 py-2 bg-primary text-on-primary rounded-xl text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity shadow-sm flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                <span class="hidden sm:inline">Open App</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Side Anchor Navigation for Specifications -->
+    <aside class="hidden xl:flex fixed left-8 top-28 bottom-8 w-56 flex-col overflow-y-auto pr-2 no-scrollbar z-30">
+        <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-on-surface-variant mb-4 px-3 opacity-60">Specification Guide</span>
+        <nav class="flex flex-col gap-1 text-xs font-semibold">
+            <a href="#overview" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">1. Brand Architecture</a>
+            <a href="#color-system" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">2. Color &amp; Subjects</a>
+            <a href="#surface-tokens" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">3. Surface &amp; Dark Mode</a>
+            <a href="#typography" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">4. Typography &amp; Scale</a>
+            <a href="#radii-borders" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">5. Radii &amp; Borders</a>
+            <a href="#shadows-glass" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">6. Elevation &amp; Glass</a>
+            <a href="#layout-grid" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">7. Layouts &amp; Mobile</a>
+            <a href="#components" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">8. Component Library</a>
+            <a href="#shimmers" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">9. Boneyard Shimmers</a>
+            <a href="#code-config" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">10. Developer Setup</a>
+        </nav>
+        
+        <div class="mt-auto p-3 bg-surface-container-low rounded-2xl border border-surface-container-highest/30">
+            <span class="text-[0.6rem] font-bold text-primary uppercase tracking-widest block mb-1">Developer Ready</span>
+            <p class="text-[0.7rem] text-on-surface-variant leading-tight">Tailwind CSS 3.x tokens, CSS3 custom properties, and vanilla JS bindings.</p>
+        </div>
+    </aside>
+
+    <!-- Main Specification Container -->
+    <main class="pt-28 pb-32 px-6 lg:px-12 xl:ml-64 max-w-7xl">
+
+        <!-- Banner Hero Section -->
+        <section id="overview" class="mb-16">
+            <div class="relative bg-surface-container-low rounded-[2.5rem] p-8 lg:p-14 border border-surface-container-highest/30 overflow-hidden shadow-sm">
+                <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="max-w-3xl relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-highest/50 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.2em] text-primary mb-6">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        Design Token &amp; UI System Specification
+                    </div>
+                    <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight text-on-surface mb-4 leading-tight">
+                        The Visual Language of <span class="text-primary font-light uppercase tracking-[0.15em]">Elementa</span>
+                    </h1>
+                    <p class="text-sm lg:text-base text-on-surface-variant leading-relaxed mb-8">
+                        Elementa is built on four core principles: academic clarity, structural restraint, subject-reactive dynamic theming, and glassmorphic elevation. Every token in this guide is mathematically aligned to support both high-focus study and seamless cross-platform implementation.
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-surface-container-highest/30 text-left">
+                        <div>
+                            <span class="text-[0.6rem] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 block">Typeface</span>
+                            <span class="text-sm font-bold text-on-surface">Manrope (Google Fonts)</span>
+                        </div>
+                        <div>
+                            <span class="text-[0.6rem] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 block">Color Engine</span>
+                            <span class="text-sm font-bold text-on-surface">CSS3 Variables + M3 Tokens</span>
+                        </div>
+                        <div>
+                            <span class="text-[0.6rem] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 block">Subjects</span>
+                            <span class="text-sm font-bold text-on-surface">Physics, Math, Bio, Chem</span>
+                        </div>
+                        <div>
+                            <span class="text-[0.6rem] font-bold uppercase tracking-widest text-on-surface-variant opacity-60 block">Grid Philosophy</span>
+                            <span class="text-sm font-bold text-on-surface">Mobile First (1023px Break)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Subject Color Palette Engine -->
+        <section id="color-system" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Color Tokens Part 1</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Dynamic Subject Palettes</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Elementa adapts its primary accent system dynamically based on the student's active subject. The document element receives <code class="bg-surface-container px-1.5 py-0.5 rounded text-xs font-mono">data-subject="[Name]"</code> which rebinds <code class="bg-surface-container px-1.5 py-0.5 rounded text-xs font-mono">--primary</code>, <code class="bg-surface-container px-1.5 py-0.5 rounded text-xs font-mono">--primary-container</code>, and associated contrast tokens.
+                </p>
+            </div>
+
+            <!-- Subject Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- Physics -->
+                <div class="bg-surface-container-low p-6 rounded-[2rem] border border-surface-container-highest/30 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full text-[0.6rem] font-extrabold uppercase tracking-widest bg-[#455f88]/15 text-[#455f88]">Physics</span>
+                            <span class="material-symbols-outlined text-[#455f88]">bolt</span>
+                        </div>
+                        <div class="h-20 rounded-2xl bg-[#455f88] mb-4 flex items-end p-3 text-white">
+                            <div>
+                                <span class="text-xs font-black block">Steel Blue</span>
+                                <span class="font-mono text-[0.65rem] opacity-80">#455f88</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#38527b]">#d6e3ff</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary</span>
+                                <span class="font-mono font-bold text-[0.7rem]">#f6f7ff</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#38527b]">#38527b</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Dim</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#39537c]">#39537c</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="setPreviewSubject('Physics')" class="mt-6 w-full py-2.5 rounded-xl bg-[#455f88] text-white text-[0.65rem] font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">Apply Physics Theme</button>
+                </div>
+
+                <!-- Math -->
+                <div class="bg-surface-container-low p-6 rounded-[2rem] border border-surface-container-highest/30 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full text-[0.6rem] font-extrabold uppercase tracking-widest bg-[#8a2525]/15 text-[#8a2525]">Mathematics</span>
+                            <span class="material-symbols-outlined text-[#8a2525]">calculate</span>
+                        </div>
+                        <div class="h-20 rounded-2xl bg-[#8a2525] mb-4 flex items-end p-3 text-white">
+                            <div>
+                                <span class="text-xs font-black block">Crimson Oxide</span>
+                                <span class="font-mono text-[0.65rem] opacity-80">#8a2525</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#7f1d1d]">#fee2e2</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary</span>
+                                <span class="font-mono font-bold text-[0.7rem]">#ffffff</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#7f1d1d]">#7f1d1d</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Dim</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#6b1d1d]">#6b1d1d</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="setPreviewSubject('Math')" class="mt-6 w-full py-2.5 rounded-xl bg-[#8a2525] text-white text-[0.65rem] font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">Apply Math Theme</button>
+                </div>
+
+                <!-- Biology -->
+                <div class="bg-surface-container-low p-6 rounded-[2rem] border border-surface-container-highest/30 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full text-[0.6rem] font-extrabold uppercase tracking-widest bg-[#165a3c]/15 text-[#165a3c]">Biology</span>
+                            <span class="material-symbols-outlined text-[#165a3c]">genetics</span>
+                        </div>
+                        <div class="h-20 rounded-2xl bg-[#165a3c] mb-4 flex items-end p-3 text-white">
+                            <div>
+                                <span class="text-xs font-black block">Emerald Forest</span>
+                                <span class="font-mono text-[0.65rem] opacity-80">#165a3c</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#064e3b]">#d1fae5</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary</span>
+                                <span class="font-mono font-bold text-[0.7rem]">#ffffff</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#064e3b]">#064e3b</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Dim</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#0d402a]">#0d402a</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="setPreviewSubject('Biology')" class="mt-6 w-full py-2.5 rounded-xl bg-[#165a3c] text-white text-[0.65rem] font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">Apply Biology Theme</button>
+                </div>
+
+                <!-- Chemistry -->
+                <div class="bg-surface-container-low p-6 rounded-[2rem] border border-surface-container-highest/30 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full text-[0.6rem] font-extrabold uppercase tracking-widest bg-[#543884]/15 text-[#543884]">Chemistry</span>
+                            <span class="material-symbols-outlined text-[#543884]">science</span>
+                        </div>
+                        <div class="h-20 rounded-2xl bg-[#543884] mb-4 flex items-end p-3 text-white">
+                            <div>
+                                <span class="text-xs font-black block">Royal Violet</span>
+                                <span class="font-mono text-[0.65rem] opacity-80">#543884</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#581c87]">#f3e8ff</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary</span>
+                                <span class="font-mono font-bold text-[0.7rem]">#ffffff</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-surface-container-highest/20">
+                                <span class="text-on-surface-variant text-[0.7rem]">On Primary Container</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#581c87]">#581c87</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="text-on-surface-variant text-[0.7rem]">Primary Dim</span>
+                                <span class="font-mono font-bold text-[0.7rem] text-[#3d2861]">#3d2861</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="setPreviewSubject('Chemistry')" class="mt-6 w-full py-2.5 rounded-xl bg-[#543884] text-white text-[0.65rem] font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">Apply Chemistry Theme</button>
+                </div>
+            </div>
+
+            <!-- Subject Metadata Table -->
+            <div class="bg-surface-container-lowest rounded-2xl border border-surface-container-highest/30 overflow-hidden shadow-sm">
+                <div class="p-4 bg-surface-container border-b border-surface-container-highest/20 flex items-center justify-between">
+                    <span class="text-xs font-bold text-on-surface uppercase tracking-wider">Subject Identity Mapping Table</span>
+                    <span class="text-[0.65rem] text-on-surface-variant font-mono">Used across Avatar Generator, Modals, &amp; Sidebars</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-surface-container-low text-on-surface-variant font-mono text-[0.65rem] uppercase">
+                            <tr>
+                                <th class="p-4">Subject</th>
+                                <th class="p-4">Primary Hex</th>
+                                <th class="p-4">Avatar Hex</th>
+                                <th class="p-4">Material Symbol</th>
+                                <th class="p-4">Modal Card Gradient</th>
+                                <th class="p-4">Paper Identifier Suffix</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-surface-container-highest/20 font-medium">
+                            <tr class="hover:bg-surface-container/30 transition-colors">
+                                <td class="p-4 font-bold text-[#455f88]">Physics</td>
+                                <td class="p-4 font-mono">#455f88</td>
+                                <td class="p-4 font-mono">455f88</td>
+                                <td class="p-4 flex items-center gap-2"><span class="material-symbols-outlined text-sm">bolt</span> bolt</td>
+                                <td class="p-4 font-mono text-[0.7rem] text-on-surface-variant">from-[#455f88]/20 to-[#455f88]/5</td>
+                                <td class="p-4 font-mono text-primary font-bold">P / PR</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container/30 transition-colors">
+                                <td class="p-4 font-bold text-[#8a2525]">Mathematics</td>
+                                <td class="p-4 font-mono">#8a2525</td>
+                                <td class="p-4 font-mono">8a2525</td>
+                                <td class="p-4 flex items-center gap-2"><span class="material-symbols-outlined text-sm">calculate</span> calculate</td>
+                                <td class="p-4 font-mono text-[0.7rem] text-on-surface-variant">from-[#8a2525]/20 to-[#8a2525]/5</td>
+                                <td class="p-4 font-mono text-primary font-bold">H / HR</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container/30 transition-colors">
+                                <td class="p-4 font-bold text-[#165a3c]">Biology</td>
+                                <td class="p-4 font-mono">#165a3c</td>
+                                <td class="p-4 font-mono">165a3c</td>
+                                <td class="p-4 flex items-center gap-2"><span class="material-symbols-outlined text-sm">genetics</span> genetics</td>
+                                <td class="p-4 font-mono text-[0.7rem] text-on-surface-variant">from-[#165a3c]/20 to-[#165a3c]/5</td>
+                                <td class="p-4 font-mono text-primary font-bold">B / BR</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container/30 transition-colors">
+                                <td class="p-4 font-bold text-[#543884]">Chemistry</td>
+                                <td class="p-4 font-mono">#543884</td>
+                                <td class="p-4 font-mono">543884</td>
+                                <td class="p-4 flex items-center gap-2"><span class="material-symbols-outlined text-sm">science</span> science</td>
+                                <td class="p-4 font-mono text-[0.7rem] text-on-surface-variant">from-[#543884]/20 to-[#543884]/5</td>
+                                <td class="p-4 font-mono text-primary font-bold">C / CR</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Core Surface & Neutral Tokens -->
+        <section id="surface-tokens" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Color Tokens Part 2</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Surface Tonal Elevations</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Elementa relies on an Material 3 inspired tonal surface hierarchy rather than flat white or random greys. Surfaces ascend from lowest to highest to define layer depth and card containers.
+                </p>
+            </div>
+
+            <!-- Tonal Swatches -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+                <!-- lowest -->
+                <div class="p-4 rounded-2xl bg-surface-container-lowest border border-surface-container-highest/30 shadow-sm">
+                    <div class="h-12 rounded-xl bg-surface-container-lowest border border-black/5 mb-3"></div>
+                    <span class="text-xs font-bold block text-on-surface">Lowest Surface</span>
+                    <span class="text-[0.6rem] font-mono text-on-surface-variant block">#ffffff (light)</span>
+                    <span class="text-[0.6rem] text-on-surface-variant opacity-70 mt-1 block">Modals, input wells</span>
+                </div>
+                <!-- low -->
+                <div class="p-4 rounded-2xl bg-surface-container-low border border-surface-container-highest/30 shadow-sm">
+                    <div class="h-12 rounded-xl bg-surface-container-low border border-black/5 mb-3"></div>
+                    <span class="text-xs font-bold block text-on-surface">Low Surface</span>
+                    <span class="text-[0.6rem] font-mono text-on-surface-variant block">#f1f4f6 (light)</span>
+                    <span class="text-[0.6rem] text-on-surface-variant opacity-70 mt-1 block">Sidebar, card tiles</span>
+                </div>
+                <!-- surface / background -->
+                <div class="p-4 rounded-2xl bg-surface border border-surface-container-highest/30 shadow-sm">
+                    <div class="h-12 rounded-xl bg-surface border border-black/5 mb-3"></div>
+                    <span class="text-xs font-bold block text-on-surface">Canvas Base</span>
+                    <span class="text-[0.6rem] font-mono text-on-surface-variant block">#f8f9fa (light)</span>
+                    <span class="text-[0.6rem] text-on-surface-variant opacity-70 mt-1 block">Main body canvas</span>
+                </div>
+                <!-- container -->
+                <div class="p-4 rounded-2xl bg-surface-container border border-surface-container-highest/30 shadow-sm">
+                    <div class="h-12 rounded-xl bg-surface-container border border-black/5 mb-3"></div>
+                    <span class="text-xs font-bold block text-on-surface">Container</span>
+                    <span class="text-[0.6rem] font-mono text-on-surface-variant block">#eaeff1 (light)</span>
+                    <span class="text-[0.6rem] text-on-surface-variant opacity-70 mt-1 block">Search pills, tags</span>
+                </div>
+                <!-- high -->
+                <div class="p-4 rounded-2xl bg-surface-container-high border border-surface-container-highest/30 shadow-sm">
+                    <div class="h-12 rounded-xl bg-surface-container-high border border-black/5 mb-3"></div>
+                    <span class="text-xs font-bold block text-on-surface">Container High</span>
+                    <span class="text-[0.6rem] font-mono text-on-surface-variant block">#e3e9ec (light)</span>
+                    <span class="text-[0.6rem] text-on-surface-variant opacity-70 mt-1 block">Hover backgrounds</span>
+                </div>
+                <!-- highest -->
+                <div class="p-4 rounded-2xl bg-surface-container-highest border border-surface-container-highest/30 shadow-sm">
+                    <div class="h-12 rounded-xl bg-surface-container-highest border border-black/5 mb-3"></div>
+                    <span class="text-xs font-bold block text-on-surface">Container Highest</span>
+                    <span class="text-[0.6rem] font-mono text-on-surface-variant block">#dbe4e7 (light)</span>
+                    <span class="text-[0.6rem] text-on-surface-variant opacity-70 mt-1 block">Borders &amp; dividers</span>
+                </div>
+            </div>
+
+            <!-- Typography & Status Color Row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Text on surface -->
+                <div class="bg-surface-container-low p-6 rounded-2xl border border-surface-container-highest/30">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-primary mb-4">Text Contrast Tokens</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm font-bold text-on-surface block">Primary Text: on-surface</span>
+                                <span class="text-[0.65rem] font-mono text-on-surface-variant">#2b3437 (Light) / #f8f9fa (Dark)</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded bg-surface-container text-[0.65rem] font-mono font-bold">11.8:1 AA</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm font-semibold text-on-surface-variant block">Secondary Text: on-surface-variant</span>
+                                <span class="text-[0.65rem] font-mono text-on-surface-variant">#586064 (Light) / #abb3b7 (Dark)</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded bg-surface-container text-[0.65rem] font-mono font-bold">5.4:1 AA</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm font-medium text-outline block">Border Outline: outline</span>
+                                <span class="text-[0.65rem] font-mono text-on-surface-variant">#737c7f / #abb3b7</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded bg-surface-container text-[0.65rem] font-mono font-bold">3.2:1 UI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error & Semantic -->
+                <div class="bg-surface-container-low p-6 rounded-2xl border border-surface-container-highest/30">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-error mb-4">Error &amp; Alert System</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm font-bold text-error block">Error Accent</span>
+                                <span class="text-[0.65rem] font-mono text-on-surface-variant">#9f403d</span>
+                            </div>
+                            <div class="w-6 h-6 rounded bg-[#9f403d]"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm font-bold text-on-surface block">Error Container</span>
+                                <span class="text-[0.65rem] font-mono text-on-surface-variant">#fe8983</span>
+                            </div>
+                            <div class="w-6 h-6 rounded bg-[#fe8983]"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-sm font-bold text-on-surface block">Error Dim / Deep</span>
+                                <span class="text-[0.65rem] font-mono text-on-surface-variant">#4e0309</span>
+                            </div>
+                            <div class="w-6 h-6 rounded bg-[#4e0309]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dark Theme Architecture -->
+                <div class="bg-surface-container-low p-6 rounded-2xl border border-surface-container-highest/30">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-primary mb-4">Dark Canvas Inversion</h3>
+                    <p class="text-xs text-on-surface-variant leading-relaxed mb-4">
+                        Elementa uses an obsidian background tone rather than harsh pure black.
+                    </p>
+                    <div class="space-y-2 text-xs font-mono">
+                        <div class="flex justify-between p-2 rounded bg-black/10">
+                            <span>html.dark body</span>
+                            <span class="font-bold">#0c0f10</span>
+                        </div>
+                        <div class="flex justify-between p-2 rounded bg-black/10">
+                            <span>html.dark aside</span>
+                            <span class="font-bold">#1a1f24</span>
+                        </div>
+                        <div class="flex justify-between p-2 rounded bg-black/10">
+                            <span>html.dark header</span>
+                            <span class="font-bold">rgba(13, 17, 23, 0.8)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Typography & Hierarchy -->
+        <section id="typography" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Foundations Part 3</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Typography Engine</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Set exclusively in <strong class="text-on-surface">Manrope</strong> (Google Fonts). Manrope's geometric yet humanist letterforms provide superior legibility for exam titles, dates, and mathematical nomenclature. Monospaced timecodes use <strong class="text-on-surface">JetBrains Mono</strong>.
+                </p>
+            </div>
+
+            <!-- Type Scale Specimen Stack -->
+            <div class="bg-surface-container-low rounded-[2rem] border border-surface-container-highest/30 p-8 space-y-8">
+                
+                <!-- Display / Hero -->
+                <div class="pb-6 border-b border-surface-container-highest/20">
+                    <div class="flex justify-between text-[0.65rem] font-mono uppercase text-on-surface-variant opacity-60 mb-2">
+                        <span>Display Large / Landing Hero</span>
+                        <span>text-5xl font-light tracking-[0.3em] uppercase</span>
+                    </div>
+                    <div class="text-4xl sm:text-5xl font-light tracking-[0.3em] uppercase text-on-surface">ELEMENTA</div>
+                </div>
+
+                <!-- Page Headline / Welcome -->
+                <div class="pb-6 border-b border-surface-container-highest/20">
+                    <div class="flex justify-between text-[0.65rem] font-mono uppercase text-on-surface-variant opacity-60 mb-2">
+                        <span>Headline H1 / Portal Header</span>
+                        <span>text-4xl lg:text-6xl font-black tracking-tighter</span>
+                    </div>
+                    <div class="text-3xl sm:text-5xl font-black tracking-tighter text-on-surface">Welcome Back.</div>
+                </div>
+
+                <!-- Command Center / Major Title -->
+                <div class="pb-6 border-b border-surface-container-highest/20">
+                    <div class="flex justify-between text-[0.65rem] font-mono uppercase text-on-surface-variant opacity-60 mb-2">
+                        <span>Headline H2 / Section Title</span>
+                        <span>text-3xl lg:text-5xl font-bold tracking-tight</span>
+                    </div>
+                    <div class="text-2xl sm:text-4xl font-bold tracking-tight text-on-surface">Command Center Oversight</div>
+                </div>
+
+                <!-- Paper Walkthrough Title -->
+                <div class="pb-6 border-b border-surface-container-highest/20">
+                    <div class="flex justify-between text-[0.65rem] font-mono uppercase text-on-surface-variant opacity-60 mb-2">
+                        <span>Card Headline H3 / Video Title</span>
+                        <span>text-lg sm:text-xl font-bold tracking-tight</span>
+                    </div>
+                    <div class="text-lg sm:text-xl font-bold tracking-tight text-on-surface">Paper 1PR - June 2025 Series</div>
+                </div>
+
+                <!-- Body Text -->
+                <div class="pb-6 border-b border-surface-container-highest/20">
+                    <div class="flex justify-between text-[0.65rem] font-mono uppercase text-on-surface-variant opacity-60 mb-2">
+                        <span>Body Regular / Guidance</span>
+                        <span>text-sm text-on-surface-variant leading-relaxed</span>
+                    </div>
+                    <p class="text-sm text-on-surface-variant leading-relaxed max-w-3xl">
+                        Master the June 2025 Series with our high-fidelity video walkthrough. Use the Quick Resources panel to download the official Question Paper and Mark Scheme for a complete revision experience.
+                    </p>
+                </div>
+
+                <!-- Super-Headers & Tracking Labels -->
+                <div>
+                    <div class="flex justify-between text-[0.65rem] font-mono uppercase text-on-surface-variant opacity-60 mb-2">
+                        <span>Micro-Label / Super Header / Status</span>
+                        <span>text-[0.65rem] font-black uppercase tracking-[0.2em] text-primary</span>
+                    </div>
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <span class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-primary">Resume Walkthrough</span>
+                        <span class="text-[0.6rem] font-bold text-on-surface-variant uppercase tracking-widest opacity-60">Portal Session</span>
+                        <span class="px-2 py-0.5 rounded bg-surface-container text-[0.6rem] font-bold uppercase tracking-wider text-on-surface-variant">Admin Oversight</span>
+                        <span class="font-mono text-xs font-bold text-primary">0:14 / 0:31</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Radii, Shapes & Borders -->
+        <section id="radii-borders" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Foundations Part 4</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Borders, Radii &amp; Geometry</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Elementa applies rounded geometry hierarchically. Small interactive widgets carry 12px radii, content cards carry 16px to 24px radii, and focal interactive portals carry up to 40px radii. Full pills are reserved for buttons, status chips, and progress tracks.
+                </p>
+            </div>
+
+            <!-- Radii Cards Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 text-center">
+                <!-- 4px -->
+                <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container-highest/30">
+                    <div class="w-12 h-12 mx-auto bg-primary/20 border-2 border-primary rounded mb-3"></div>
+                    <span class="text-xs font-bold block">Micro</span>
+                    <span class="font-mono text-[0.65rem] text-on-surface-variant">4px (0.25rem)</span>
+                    <span class="text-[0.6rem] opacity-60 mt-1 block">Skeleton text, chips</span>
+                </div>
+                <!-- 12px -->
+                <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container-highest/30">
+                    <div class="w-12 h-12 mx-auto bg-primary/20 border-2 border-primary rounded-xl mb-3"></div>
+                    <span class="text-xs font-bold block">Medium</span>
+                    <span class="font-mono text-[0.65rem] text-on-surface-variant">12px (0.75rem)</span>
+                    <span class="text-[0.6rem] opacity-60 mt-1 block">Buttons, inputs</span>
+                </div>
+                <!-- 16px -->
+                <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container-highest/30">
+                    <div class="w-12 h-12 mx-auto bg-primary/20 border-2 border-primary rounded-2xl mb-3"></div>
+                    <span class="text-xs font-bold block">Large</span>
+                    <span class="font-mono text-[0.65rem] text-on-surface-variant">16px (1rem)</span>
+                    <span class="text-[0.6rem] opacity-60 mt-1 block">Cards, rows, modal inputs</span>
+                </div>
+                <!-- 24px -->
+                <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container-highest/30">
+                    <div class="w-12 h-12 mx-auto bg-primary/20 border-2 border-primary rounded-3xl mb-3"></div>
+                    <span class="text-xs font-bold block">Jumbo</span>
+                    <span class="font-mono text-[0.65rem] text-on-surface-variant">24px (1.5rem)</span>
+                    <span class="text-[0.6rem] opacity-60 mt-1 block">Admin cards, hubs</span>
+                </div>
+                <!-- 40px -->
+                <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container-highest/30">
+                    <div class="w-12 h-12 mx-auto bg-primary/20 border-2 border-primary rounded-[2.5rem] mb-3"></div>
+                    <span class="text-xs font-bold block">Maximum</span>
+                    <span class="font-mono text-[0.65rem] text-on-surface-variant">40px (2.5rem)</span>
+                    <span class="text-[0.6rem] opacity-60 mt-1 block">Subject tiles, hero</span>
+                </div>
+                <!-- Pill -->
+                <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container-highest/30">
+                    <div class="w-12 h-12 mx-auto bg-primary/20 border-2 border-primary rounded-full mb-3"></div>
+                    <span class="text-xs font-bold block">Full Pill</span>
+                    <span class="font-mono text-[0.65rem] text-on-surface-variant">9999px (full)</span>
+                    <span class="text-[0.6rem] opacity-60 mt-1 block">Avatars, tracks, pills</span>
+                </div>
+            </div>
+
+            <!-- Border Specification Note -->
+            <div class="p-6 bg-surface-container-lowest rounded-2xl border border-surface-container-highest/30 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-on-surface">Border Density Standard</h4>
+                    <p class="text-xs text-on-surface-variant mt-0.5">All dividers and outlines must strictly use 1px width with opacity tints. Never use 2px or solid black borders.</p>
+                </div>
+                <div class="flex gap-3">
+                    <code class="text-xs font-mono bg-surface-container px-2 py-1 rounded border border-surface-container-highest/30">border-surface-container-highest/20</code>
+                    <code class="text-xs font-mono bg-surface-container px-2 py-1 rounded border border-surface-container-highest/30">border-surface-container-highest/30</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Elevation, Shadows & Glassmorphism -->
+        <section id="shadows-glass" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Foundations Part 5</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Elevation &amp; Glassmorphism</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Shadows in Elementa are strictly functional for layer separation. Glassmorphism is restrained to top app bars and modal backdrops, never stacked across every card.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card Elevation -->
+                <div class="bg-surface-container-low p-6 rounded-2xl border border-surface-container-highest/30">
+                    <span class="text-[0.6rem] font-bold uppercase tracking-widest text-primary block mb-2">Elevation 1 &amp; 2</span>
+                    <h4 class="text-sm font-bold text-on-surface mb-3">Content Depth</h4>
+                    <div class="p-4 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container-highest/20 mb-3">
+                        <span class="text-xs font-bold block">shadow-sm (Resting Card)</span>
+                        <span class="text-[0.65rem] text-on-surface-variant">Default card boundary</span>
+                    </div>
+                    <div class="p-4 bg-surface-container-lowest rounded-xl shadow-xl border border-surface-container-highest/20">
+                        <span class="text-xs font-bold block">shadow-xl (Elevated Hero)</span>
+                        <span class="text-[0.65rem] text-on-surface-variant">Hero video player and active cards</span>
+                    </div>
+                </div>
+
+                <!-- Primary Accent Glow -->
+                <div class="bg-surface-container-low p-6 rounded-2xl border border-surface-container-highest/30">
+                    <span class="text-[0.6rem] font-bold uppercase tracking-widest text-primary block mb-2">Focal Accent</span>
+                    <h4 class="text-sm font-bold text-on-surface mb-3">Active CTA Glow</h4>
+                    <p class="text-xs text-on-surface-variant mb-4 leading-relaxed">
+                        To draw high focus without noisy borders, key action buttons emit a soft glow matched to the subject's primary color:
+                    </p>
+                    <div class="p-4 bg-surface-container-lowest rounded-xl flex items-center justify-center">
+                        <button class="px-6 py-3 rounded-full bg-primary text-on-primary text-xs font-bold uppercase tracking-widest shadow-xl shadow-primary/25 hover:scale-105 transition-transform">
+                            Interactive CTA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Glassmorphism Spec -->
+                <div class="bg-surface-container-low p-6 rounded-2xl border border-surface-container-highest/30">
+                    <span class="text-[0.6rem] font-bold uppercase tracking-widest text-primary block mb-2">Translucency</span>
+                    <h4 class="text-sm font-bold text-on-surface mb-3">Backdrop Filter Formula</h4>
+                    <div class="space-y-2 text-xs font-mono text-on-surface-variant">
+                        <div class="p-2.5 rounded bg-surface-container">
+                            <span class="text-primary font-bold">backdrop-filter:</span> blur(24px);
+                        </div>
+                        <div class="p-2.5 rounded bg-surface-container">
+                            <span class="text-primary font-bold">Light Header:</span> rgba(248, 249, 250, 0.8)
+                        </div>
+                        <div class="p-2.5 rounded bg-surface-container">
+                            <span class="text-primary font-bold">Dark Header:</span> rgba(13, 17, 23, 0.8)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Layout Architecture & Mobile Rules -->
+        <section id="layout-grid" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Architecture Part 6</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Layout Grid &amp; Mobile Rules</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Elementa employs a fixed sidebar on desktop that transitions smoothly into a full-screen mobile slide-out drawer below 1024px.
+                </p>
+            </div>
+
+            <!-- Wireframe Schematic Display -->
+            <div class="bg-surface-container-low p-8 rounded-[2rem] border border-surface-container-highest/30 mb-6">
+                <div class="grid grid-cols-12 gap-4 h-64 border border-dashed border-outline-variant/40 rounded-2xl p-4 text-xs font-mono">
+                    <!-- Sidebar Column -->
+                    <div class="col-span-3 bg-surface-container rounded-xl p-3 flex flex-col justify-between border border-surface-container-highest/40">
+                        <div>
+                            <span class="font-bold text-primary block mb-2">aside.fixed</span>
+                            <span class="text-[0.65rem] text-on-surface-variant block">w-64 (16rem)</span>
+                            <span class="text-[0.65rem] text-on-surface-variant block">h-screen, z-50</span>
+                        </div>
+                        <span class="text-[0.6rem] text-on-surface-variant opacity-60">hidden lg:flex</span>
+                    </div>
+
+                    <!-- Main Canvas Column -->
+                    <div class="col-span-9 flex flex-col gap-4">
+                        <!-- Header Bar -->
+                        <div class="h-12 bg-surface-container-high rounded-xl p-3 flex items-center justify-between border border-surface-container-highest/40">
+                            <span class="font-bold text-on-surface">header.fixed (lg:w-[calc(100%-16rem)])</span>
+                            <span class="text-[0.65rem] text-on-surface-variant">h-20, z-40, blur(24px)</span>
+                        </div>
+                        <!-- Canvas Body -->
+                        <div class="flex-1 bg-surface-container-lowest rounded-xl p-4 border border-surface-container-highest/30 flex items-center justify-center text-center">
+                            <div>
+                                <span class="font-bold text-on-surface block">main.ml-0 lg:ml-64</span>
+                                <span class="text-[0.65rem] text-on-surface-variant block mt-1">pt-20 or pt-24 min-h-screen px-4 lg:px-12</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsive Rules Box -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-container-highest/30">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-primary mb-3">Desktop Layout (> 1023px)</h4>
+                    <ul class="text-xs text-on-surface-variant space-y-2 list-disc pl-4">
+                        <li>Sidebar is fixed at 16rem width with an independent scroll track.</li>
+                        <li>Main viewport applies <code class="bg-surface-container px-1 rounded">ml-64</code> margin offset.</li>
+                        <li>Top header bar spans <code class="bg-surface-container px-1 rounded">w-[calc(100%-16rem)]</code> fixed to top right.</li>
+                        <li>Search input is fully expanded with 24rem width.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-container-highest/30">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-primary mb-3">Mobile &amp; Tablet (&le; 1023px)</h4>
+                    <ul class="text-xs text-on-surface-variant space-y-2 list-disc pl-4">
+                        <li>Sidebar is hidden via <code class="bg-surface-container px-1 rounded">display: none !important</code>.</li>
+                        <li>Header bar spans full width (100%) with hamburger toggle on left.</li>
+                        <li>Full-screen drawer slides in from right (<code class="bg-surface-container px-1 rounded">translate-x-full</code> transition).</li>
+                        <li>Minimum tap target is 44px on all interactive icons and links.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Interactive Component Library -->
+        <section id="components" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Component Gallery Part 7</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Interactive Component Library</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Live interactive implementations of every major component in Elementa. App developers should replicate these exact class names and structures.
+                </p>
+            </div>
+
+            <!-- Component 1: Video Card -->
+            <div class="mb-12 bg-surface-container-low p-8 rounded-[2.5rem] border border-surface-container-highest/30">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider">Video Lesson Thumbnail Card</h3>
+                        <p class="text-xs text-on-surface-variant">Hover to preview the luminosity transition and play button reveal.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-surface-container rounded-full text-[0.65rem] font-mono font-bold">Standard Library Card</span>
+                </div>
+
+                <!-- Live Card Specimen -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="group cursor-pointer">
+                        <div class="aspect-video bg-surface-container border border-surface-container-highest/20 rounded-2xl mb-4 relative overflow-hidden transition-transform duration-500 hover:-translate-y-1">
+                            <img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80" alt="Lesson Thumbnail" class="w-full h-full object-cover mix-blend-luminosity opacity-50 group-hover:scale-105 group-hover:mix-blend-normal transition-all duration-700"/>
+                            
+                            <!-- Top Progress Bar Line -->
+                            <div class="absolute top-0 left-0 right-0 p-4">
+                                <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
+                                    <div class="bg-primary h-full transition-all duration-1000" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Hover Play Reveal -->
+                            <div class="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-12 h-12 rounded-full bg-surface-container-lowest/90 flex items-center justify-center text-primary shadow-xl">
+                                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Percentage Badge -->
+                            <span class="absolute bottom-4 right-4 bg-surface-container-lowest/90 backdrop-blur-md text-on-surface px-2 py-1 rounded text-[0.6rem] font-bold tracking-widest uppercase">75% Done</span>
+                        </div>
+                        <h4 class="text-sm font-bold tracking-tight text-on-surface mb-1 group-hover:text-primary transition-colors">Paper 1PR - June 2025 Series</h4>
+                        <p class="text-on-surface-variant font-medium text-[0.65rem] uppercase tracking-widest">31:00 Duration</p>
+                    </div>
+
+                    <div class="md:col-span-2 flex flex-col justify-center">
+                        <div class="code-block">
+                            <pre><code>&lt;div class="group cursor-pointer"&gt;
+  &lt;div class="aspect-video bg-surface-container border border-surface-container-highest/20 rounded-2xl relative overflow-hidden transition-transform duration-500 hover:-translate-y-1"&gt;
+    &lt;img src="..." class="w-full h-full object-cover mix-blend-luminosity opacity-50 group-hover:scale-105 group-hover:mix-blend-normal transition-all duration-700"/&gt;
+    &lt;div class="absolute top-0 left-0 right-0 p-4"&gt;
+      &lt;div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden backdrop-blur-sm"&gt;
+        &lt;div class="bg-primary h-full" style="width: 75%"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;span class="absolute bottom-4 right-4 bg-surface-container-lowest/90 text-on-surface px-2 py-1 rounded text-[0.6rem] font-bold tracking-widest"&gt;75% Done&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component 2: Resource Download Cards -->
+            <div class="mb-12 bg-surface-container-low p-8 rounded-[2.5rem] border border-surface-container-highest/30">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider">Exam Vault Resource Items</h3>
+                        <p class="text-xs text-on-surface-variant">Three variants: Question Paper, Marking Scheme, and Atelier Model Answers.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-surface-container rounded-full text-[0.65rem] font-mono font-bold">Player Quick Resources</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- QP -->
+                    <a href="javascript:void(0)" class="flex items-center justify-between p-4 bg-surface-container-lowest hover:bg-surface-container-high rounded-2xl transition-all border border-surface-container-highest/20 group">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-xl">description</span>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">Question Paper</span>
+                                <span class="text-[0.6rem] opacity-60 font-medium uppercase tracking-widest text-on-surface-variant">PDF Document</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-lg text-on-surface-variant opacity-40 group-hover:opacity-100 transition-opacity">download</span>
+                    </a>
+
+                    <!-- MS -->
+                    <a href="javascript:void(0)" class="flex items-center justify-between p-4 bg-surface-container-lowest hover:bg-surface-container-high rounded-2xl transition-all border border-surface-container-highest/20 group">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-secondary p-2 bg-secondary/10 rounded-xl">rule</span>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">Mark Scheme</span>
+                                <span class="text-[0.6rem] opacity-60 font-medium uppercase tracking-widest text-on-surface-variant">Official MS</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-lg text-on-surface-variant opacity-40 group-hover:opacity-100 transition-opacity">download</span>
+                    </a>
+
+                    <!-- MA -->
+                    <a href="javascript:void(0)" class="flex items-center justify-between p-4 bg-surface-container-lowest hover:bg-surface-container-high rounded-2xl transition-all border border-surface-container-highest/20 group">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-xl">edit_note</span>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">Model Answer</span>
+                                <span class="text-[0.6rem] opacity-60 font-medium uppercase tracking-widest text-on-surface-variant">Atelier Solutions</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-lg text-on-surface-variant opacity-40 group-hover:opacity-100 transition-opacity">download</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Component 3: Button Styles -->
+            <div class="mb-12 bg-surface-container-low p-8 rounded-[2.5rem] border border-surface-container-highest/30">
+                <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider mb-6">Button System &amp; Interactive States</h3>
+                <div class="flex flex-wrap gap-4 items-center">
+                    <!-- Primary CTA -->
+                    <button class="px-8 py-3.5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-widest text-[0.65rem] hover:scale-105 active:scale-95 shadow-xl shadow-primary/20 transition-all">
+                        Primary CTA Pill
+                    </button>
+
+                    <!-- Medium Rounded Primary -->
+                    <button class="px-6 py-3.5 bg-primary text-on-primary rounded-xl font-bold uppercase tracking-widest text-[0.65rem] hover:opacity-90 active:scale-95 shadow-md transition-all">
+                        Rounded-xl Action
+                    </button>
+
+                    <!-- Secondary / Tonal Button -->
+                    <button class="px-6 py-3.5 bg-surface-container hover:bg-surface-container-high text-on-surface rounded-xl font-bold uppercase tracking-widest text-[0.65rem] active:scale-95 transition-all">
+                        Tonal Secondary
+                    </button>
+
+                    <!-- Ghost Icon Button -->
+                    <button class="w-10 h-10 rounded-full hover:bg-primary/10 hover:text-primary flex items-center justify-center text-on-surface-variant transition-colors" title="Icon Action" aria-label="Icon Action">
+                        <span class="material-symbols-outlined text-xl">edit_note</span>
+                    </button>
+
+                    <!-- Danger Action Button -->
+                    <button class="px-4 py-2 bg-error/10 hover:bg-error hover:text-on-error text-error rounded-xl font-bold uppercase tracking-widest text-[0.6rem] transition-all">
+                        Delete Record
+                    </button>
+                </div>
+            </div>
+
+            <!-- Component 4: Subject Selection Portal Card -->
+            <div class="bg-surface-container-low p-8 rounded-[2.5rem] border border-surface-container-highest/30">
+                <div class="mb-6">
+                    <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider">Subject Selection Portal Tile</h3>
+                    <p class="text-xs text-on-surface-variant">Features the signature 40px rounded boundary with interactive gradient aura on hover.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="group relative bg-surface-container-lowest border border-surface-container-highest/30 rounded-[2.5rem] p-8 cursor-pointer hover:scale-[1.05] hover:shadow-2xl transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#455f88]/20 to-[#455f88]/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mb-6 border border-surface-container-highest/20 group-hover:bg-primary/10 transition-colors">
+                                <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">bolt</span>
+                            </div>
+                            <h3 class="text-xl font-black text-on-surface mb-1">Physics</h3>
+                            <p class="text-[0.6rem] font-bold text-on-surface-variant uppercase tracking-widest opacity-50">Active Portal</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative bg-surface-container-lowest border border-surface-container-highest/30 rounded-[2.5rem] p-8 cursor-pointer hover:scale-[1.05] hover:shadow-2xl transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#8a2525]/20 to-[#8a2525]/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mb-6 border border-surface-container-highest/20 group-hover:bg-[#8a2525]/10 transition-colors">
+                                <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-[#8a2525] transition-colors">calculate</span>
+                            </div>
+                            <h3 class="text-xl font-black text-on-surface mb-1">Mathematics</h3>
+                            <p class="text-[0.6rem] font-bold text-on-surface-variant uppercase tracking-widest opacity-50">Active Portal</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative bg-surface-container-lowest border border-surface-container-highest/30 rounded-[2.5rem] p-8 cursor-pointer hover:scale-[1.05] hover:shadow-2xl transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#165a3c]/20 to-[#165a3c]/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mb-6 border border-surface-container-highest/20 group-hover:bg-[#165a3c]/10 transition-colors">
+                                <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-[#165a3c] transition-colors">genetics</span>
+                            </div>
+                            <h3 class="text-xl font-black text-on-surface mb-1">Biology</h3>
+                            <p class="text-[0.6rem] font-bold text-on-surface-variant uppercase tracking-widest opacity-50">Active Portal</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative bg-surface-container-lowest border border-surface-container-highest/30 rounded-[2.5rem] p-8 cursor-pointer hover:scale-[1.05] hover:shadow-2xl transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#543884]/20 to-[#543884]/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mb-6 border border-surface-container-highest/20 group-hover:bg-[#543884]/10 transition-colors">
+                                <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-[#543884] transition-colors">science</span>
+                            </div>
+                            <h3 class="text-xl font-black text-on-surface mb-1">Chemistry</h3>
+                            <p class="text-[0.6rem] font-bold text-on-surface-variant uppercase tracking-widest opacity-50">Active Portal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Boneyard Shimmer Animation Spec -->
+        <section id="shimmers" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Loading States Part 8</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Boneyard Shimmer Animations</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Elementa avoids generic spinning wheels in favor of custom-calibrated skeleton placeholders with a linear 1.5s light-pass gradient shimmer.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-surface-container-low p-8 rounded-[2.5rem] border border-surface-container-highest/30">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-on-surface block mb-2">Live Skeleton Elements</span>
+                    
+                    <!-- Text Skeleton -->
+                    <div class="skeleton skeleton-text h-4 w-3/4"></div>
+                    <div class="skeleton skeleton-text h-3 w-1/2"></div>
+                    
+                    <!-- Box Skeleton -->
+                    <div class="skeleton skeleton-box h-24 w-full mt-4"></div>
+                    
+                    <!-- Circle Skeleton -->
+                    <div class="flex items-center gap-4 mt-4">
+                        <div class="skeleton skeleton-circle w-12 h-12 shrink-0"></div>
+                        <div class="w-full space-y-2">
+                            <div class="skeleton skeleton-text h-3 w-full"></div>
+                            <div class="skeleton skeleton-text h-3 w-2/3"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="code-block">
+                        <pre><code>/* Boneyard Shimmer Spec */
+@keyframes boneyard {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background-color: rgba(0,0,0,0.06);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0,
+    rgba(255,255,255,0.4) 20%,
+    rgba(255,255,255,0) 40%
+  );
+  background-size: 200% 100%;
+  animation: boneyard 1.5s infinite linear;
+}
+html.dark .skeleton {
+  background-color: rgba(255,255,255,0.06);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0,
+    rgba(255,255,255,0.1) 20%,
+    rgba(255,255,255,0) 40%
+  );
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Code Configuration & Developer Setup -->
+        <section id="code-config" class="mb-20 scroll-mt-28">
+            <div class="mb-8">
+                <span class="text-[0.65rem] font-black uppercase tracking-[0.25em] text-primary block mb-1">Integration Part 9</span>
+                <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Developer Implementation Guide</h2>
+                <p class="text-xs lg:text-sm text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
+                    Copy and paste the exact code snippets below into your build setup to guarantee exact parity with Elementa.
+                </p>
+            </div>
+
+            <!-- CSS Variables Code -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-on-surface uppercase tracking-wider">1. Core CSS Variables (styles.css)</span>
+                    <button onclick="copySnippet('css-vars-code')" class="px-3 py-1 bg-surface-container hover:bg-surface-container-high rounded text-xs font-mono font-bold text-primary">Copy CSS</button>
+                </div>
+                <div class="code-block" id="css-vars-code">
+                    <pre><code>:root {
+  --primary: #455f88;
+  --primary-container: #d6e3ff;
+  --on-primary: #f6f7ff;
+  --on-primary-container: #38527b;
+  --primary-dim: #39537c;
+}
+body[data-subject="Physics"] {
+  --primary: #455f88;
+  --primary-container: #d6e3ff;
+  --on-primary: #f6f7ff;
+  --on-primary-container: #38527b;
+  --primary-dim: #39537c;
+}
+body[data-subject="Math"] {
+  --primary: #8a2525;
+  --primary-container: #fee2e2;
+  --on-primary: #ffffff;
+  --on-primary-container: #7f1d1d;
+  --primary-dim: #6b1d1d;
+}
+body[data-subject="Biology"] {
+  --primary: #165a3c;
+  --primary-container: #d1fae5;
+  --on-primary: #ffffff;
+  --on-primary-container: #064e3b;
+  --primary-dim: #0d402a;
+}
+body[data-subject="Chemistry"] {
+  --primary: #543884;
+  --primary-container: #f3e8ff;
+  --on-primary: #ffffff;
+  --on-primary-container: #581c87;
+  --primary-dim: #3d2861;
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- JavaScript Helper Utilities -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold text-on-surface uppercase tracking-wider">2. Essential JS Utilities (script.js)</span>
+                    <button onclick="copySnippet('js-utils-code')" class="px-3 py-1 bg-surface-container hover:bg-surface-container-high rounded text-xs font-mono font-bold text-primary">Copy JS</button>
+                </div>
+                <div class="code-block" id="js-utils-code">
+                    <pre><code>// 1. Time string formatter (e.g. 1869s -> 31:09)
+const formatMins = (seconds) => {
+  if (!seconds || isNaN(seconds)) return '0:00';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+};
+
+// 2. Real-time watch progress calculation (0 to 100 integer)
+const formatProgress = (watched, duration) => {
+  if (!watched || !duration || duration === 0) return 0;
+  return Math.min(100, Math.floor((watched / duration) * 100));
+};
+
+// 3. Subject Switcher
+function switchSubject(subjectName) {
+  document.body.setAttribute('data-subject', subjectName);
+  document.cookie = `activeSubject=${subjectName}; path=/; max-age=28800; SameSite=Strict`;
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Watermark & Credit -->
+    <footer class="border-t border-surface-container-highest/20 py-8 px-6 lg:px-12 text-center text-xs text-on-surface-variant font-medium">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <img src="logo.png" alt="Elementa" class="w-5 h-5 object-contain" />
+                <span class="font-bold text-on-surface">Elementa Platform Design System</span>
+            </div>
+            <a href="https://yassinr.me" target="_blank" rel="noopener noreferrer" class="text-[0.65rem] font-bold tracking-[0.2em] text-on-surface uppercase hover:text-primary transition-colors">
+                Made by Yassin Ragab
+            </a>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        // Subject Preview Switcher
+        function setPreviewSubject(subject) {
+            document.body.setAttribute('data-subject', subject);
+            
+            // Highlight active button
+            const buttons = ['Physics', 'Math', 'Biology', 'Chemistry'];
+            buttons.forEach(sub => {
+                const btn = document.getElementById(`sub-btn-${sub}`);
+                if (btn) {
+                    if (sub === subject) {
+                        btn.className = 'px-3 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-wider transition-all bg-primary text-on-primary shadow-sm';
+                    } else {
+                        btn.className = 'px-3 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-wider transition-all text-on-surface hover:bg-surface-container-high';
+                    }
+                }
+            });
+        }
+
+        // Dark / Light Theme Mode Toggle
+        function toggleThemeMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const isDark = html.classList.toggle('dark');
+            html.classList.toggle('light', !isDark);
+            
+            if (icon) {
+                icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+            }
+        }
+
+        // Copy Code Snippet Helper
+        function copySnippet(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const text = el.querySelector('code').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.currentTarget;
+                const orig = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.classList.add('bg-primary', 'text-on-primary');
+                setTimeout(() => {
+                    btn.innerText = orig;
+                    btn.classList.remove('bg-primary', 'text-on-primary');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
